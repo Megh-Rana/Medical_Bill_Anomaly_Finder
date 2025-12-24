@@ -1,7 +1,16 @@
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { BillProvider } from "./context/BillContext";
 
-  import { createRoot } from "react-dom/client";
-  import App from "./App.tsx";
-  import "./index.css";
+const rootElement = document.getElementById("root");
 
-  createRoot(document.getElementById("root")!).render(<App />);
-  
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(
+  <BillProvider>
+    <App />
+  </BillProvider>
+);

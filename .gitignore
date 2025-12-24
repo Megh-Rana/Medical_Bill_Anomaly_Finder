@@ -34,3 +34,6 @@ dist-ssr
 
 # Testing
 coverage
+
+# Backend
+backend/__pycache__

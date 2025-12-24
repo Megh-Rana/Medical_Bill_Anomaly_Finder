@@ -266,3 +266,52 @@ html {
   background-size: 300% 300%;
   animation: gradient-shift 15s ease infinite;
 }
+
+/* hide print document on screen */
+#print-report {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #print-report,
+  #print-report * {
+    visibility: visible;
+  }
+
+  #print-report {
+    display: block;
+    position: absolute;
+    inset: 0;
+    padding: 20mm;
+    background: white;
+    color: black;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #000;
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 20mm;
+  }
+}
