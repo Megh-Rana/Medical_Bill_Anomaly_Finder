@@ -1,39 +1,30 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # frontend
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 class BillItem(BaseModel):
     item_name: str
-    quantity: Optional[float] = None
-    unit_price: Optional[float] = None
-    total_price: Optional[float] = None
+    quantity: Optional[float]
+    unit_price: Optional[float]
+    total_price: Optional[float]
+    category: Optional[str]
+
+class AnalyzeRequest(BaseModel):
+    items: List[BillItem]
 
 @app.post("/analyze")
-def analyze_bill(items: List[BillItem]):
-    anomalies = []
-
-    for item in items:
-        # dummy logic for now
-        if item.unit_price and item.unit_price > 10:
-            anomalies.append({
-                "item": item.item_name,
-                "issue": "Price above reference",
-                "severity": "high",
-                "explanation": "Charged price exceeds typical reference value"
-            })
-
+def analyze_bill(payload: AnalyzeRequest):
     return {
-        "classified_items": items,
-        "anomalies": anomalies
+        "classified_items": payload.items,
+        "anomalies": []
     }
