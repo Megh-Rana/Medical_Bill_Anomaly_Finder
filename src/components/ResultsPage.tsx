@@ -13,15 +13,16 @@ interface BillingItem {
   charged: string;
   typical: string;
   observation: string;
-  severity: "normal" | "warning" | "info";
+  severity: "normal" | "warning";
 }
 
 export function ResultsPage({ onNavigate }: ResultsPageProps) {
   const { billItems, analysis } = useBill();
-
-  // ensure auto-save runs once
   const hasSavedRef = useRef(false);
 
+  /* =====================
+     AUTO SAVE (ONCE)
+     ===================== */
   useEffect(() => {
     if (!analysis || hasSavedRef.current) return;
 
@@ -29,22 +30,20 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
       localStorage.getItem("savedReports") || "[]"
     );
 
-    const report = {
+    savedReports.push({
       id: Date.now(),
       createdAt: new Date().toISOString(),
       billItems,
       analysis
-    };
+    });
 
-    localStorage.setItem(
-      "savedReports",
-      JSON.stringify([...savedReports, report])
-    );
-
+    localStorage.setItem("savedReports", JSON.stringify(savedReports));
     hasSavedRef.current = true;
   }, [analysis, billItems]);
 
-  // guard: direct access
+  /* =====================
+     GUARD
+     ===================== */
   if (!analysis) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
@@ -58,17 +57,42 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
     );
   }
 
-  const results: BillingItem[] = analysis.anomalies.map((a: any) => ({
-    item: a.item,
-    charged: "—",
-    typical: "Reference based",
-    observation: a.issue,
-    severity: a.severity === "high" ? "warning" : "normal"
-  }));
+  /* =====================
+     HELPERS
+     ===================== */
+  const mapSeverity = (sev: string): "warning" | "normal" => {
+    if (sev === "high" || sev === "medium") return "warning";
+    return "normal";
+  };
 
-  const needsReviewCount = results.filter(
-    r => r.severity === "warning"
-  ).length;
+  /* =====================
+     MAP ANOMALIES → ROWS
+     ===================== */
+  const results: BillingItem[] = analysis.anomalies.map((a: any) => {
+    const matchedItem = billItems.find(
+      (i: any) =>
+        i.item_name?.toLowerCase() === a.item?.toLowerCase()
+    );
+
+    return {
+      item: a.item,
+      charged: matchedItem
+        ? `₹${matchedItem.unit_price} × ${matchedItem.quantity} = ₹${matchedItem.total_price}`
+        : "—",
+      typical: a.type,
+      observation: a.explanation || a.title,
+      severity: mapSeverity(a.severity)
+    };
+  });
+
+  /* =====================
+     CORRECT FLAG COUNT
+     ===================== */
+  const flaggedItemSet = new Set(
+    analysis.anomalies.map((a: any) => a.item)
+  );
+
+  const needsReviewCount = flaggedItemSet.size;
 
   const overallStatus =
     needsReviewCount > 0 ? "Needs Review" : "Normal";
@@ -78,15 +102,15 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
     0
   );
 
+  /* =====================
+     UI
+     ===================== */
   return (
     <>
-      {/* =====================
-          SCREEN UI
-         ===================== */}
+      {/* SCREEN */}
       <div className="py-8 px-4 sm:px-6 lg:px-8 bg-pattern">
         <div className="max-w-7xl mx-auto">
 
-          {/* HEADER */}
           <div className="mb-8">
             <h1 className="mb-2 text-4xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Analysis Results
@@ -96,33 +120,23 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
             </p>
           </div>
 
-          {/* SUMMARY */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="glass rounded-2xl p-6 border shadow-xl">
-              <p className="text-sm text-muted-foreground mb-2">
-                Overall Status
-              </p>
+              <p className="text-sm text-muted-foreground mb-2">Overall Status</p>
               <p className="text-2xl">{overallStatus}</p>
             </div>
 
             <div className="glass rounded-2xl p-6 border shadow-xl">
-              <p className="text-sm text-muted-foreground mb-2">
-                Total Charged
-              </p>
-              <p className="text-3xl">
-                ₹{totalCharged.toLocaleString()}
-              </p>
+              <p className="text-sm text-muted-foreground mb-2">Total Charged</p>
+              <p className="text-3xl">₹{totalCharged.toLocaleString()}</p>
             </div>
 
             <div className="glass rounded-2xl p-6 border shadow-xl">
-              <p className="text-sm text-muted-foreground mb-2">
-                Items Flagged
-              </p>
+              <p className="text-sm text-muted-foreground mb-2">Items Flagged</p>
               <p className="text-3xl">{needsReviewCount}</p>
             </div>
           </div>
 
-          {/* TABLE */}
           <div className="bg-card rounded-2xl border shadow-xl mb-8">
             <div className="p-6 border-b">
               <h2 className="text-2xl">Detailed Line Item Analysis</h2>
@@ -133,26 +147,23 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
                 <tr>
                   <th className="p-4 text-left">Item</th>
                   <th className="p-4 text-left">Charged</th>
-                  <th className="p-4 text-left">Typical</th>
+                  <th className="p-4 text-left">Rule</th>
                   <th className="p-4 text-left">Observation</th>
                 </tr>
               </thead>
               <tbody>
-                {results.map((item, i) => (
+                {results.map((row, i) => (
                   <tr key={i} className="border-t">
-                    <td className="p-4">{item.item}</td>
-                    <td className="p-4">{item.charged}</td>
-                    <td className="p-4 text-muted-foreground">
-                      {item.typical}
-                    </td>
-                    <td className="p-4">{item.observation}</td>
+                    <td className="p-4">{row.item}</td>
+                    <td className="p-4">{row.charged}</td>
+                    <td className="p-4 text-muted-foreground">{row.typical}</td>
+                    <td className="p-4">{row.observation}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/* ACTIONS */}
           <div className="grid sm:grid-cols-2 gap-4 no-print">
             <Button
               variant="outline"
@@ -173,9 +184,7 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
         </div>
       </div>
 
-      {/* =====================
-          PRINT DOCUMENT
-         ===================== */}
+      {/* PRINT */}
       <PrintPortal>
         <div id="print-report">
           <h1>Medical Bill Analysis Report</h1>
@@ -183,38 +192,32 @@ export function ResultsPage({ onNavigate }: ResultsPageProps) {
 
           <hr />
 
-          <h2>Summary</h2>
           <p><strong>Status:</strong> {overallStatus}</p>
           <p><strong>Total Charged:</strong> ₹{totalCharged.toLocaleString()}</p>
           <p><strong>Items Flagged:</strong> {needsReviewCount}</p>
 
           <hr />
 
-          <h2>Detailed Line Items</h2>
           <table>
             <thead>
               <tr>
                 <th>Item</th>
                 <th>Charged</th>
-                <th>Typical</th>
+                <th>Rule</th>
                 <th>Observation</th>
               </tr>
             </thead>
             <tbody>
-              {results.map((item, i) => (
+              {results.map((row, i) => (
                 <tr key={i}>
-                  <td>{item.item}</td>
-                  <td>{item.charged}</td>
-                  <td>{item.typical}</td>
-                  <td>{item.observation}</td>
+                  <td>{row.item}</td>
+                  <td>{row.charged}</td>
+                  <td>{row.typical}</td>
+                  <td>{row.observation}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          <p style={{ marginTop: 24, textAlign: "center" }}>
-            Made by Team De-Cypher with ❤️
-          </p>
         </div>
       </PrintPortal>
     </>
