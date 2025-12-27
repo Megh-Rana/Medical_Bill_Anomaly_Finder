@@ -1,116 +1,118 @@
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Mail, Lock, Sparkles } from "lucide-react";
 
 interface LoginPageProps {
   onNavigate: (page: string) => void;
-  onLogin: (email: string, name: string) => void;
 }
 
-export function LoginPage({ onNavigate, onLogin }: LoginPageProps) {
+export function LoginPage({ onNavigate }: LoginPageProps) {
+  const { loginEmail, signupEmail, loginGoogle } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const name = email.split('@')[0];
-    onLogin(email, name);
-    onNavigate('dashboard');
+  const handleEmailContinue = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await loginEmail(email, password);
+      onNavigate("dashboard");
+    } catch (err: any) {
+      // auto-signup if user doesn't exist
+      if (
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/invalid-credential"
+      ) {
+        try {
+          await signupEmail(email, password);
+          onNavigate("dashboard");
+        } catch (signupErr: any) {
+          setError(signupErr.message);
+        }
+      } else {
+        setError(err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleContinue = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await loginGoogle();
+      onNavigate("dashboard");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white text-2xl">M</span>
-            </div>
-          </div>
-          <h2 className="mb-2">Welcome back</h2>
-          <p className="text-muted-foreground">
-            Sign in to your MBAF account
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-card border border-border rounded-xl p-8 shadow-sm">
+        <h1 className="text-2xl text-center mb-2">
+          Welcome to MBAF
+        </h1>
 
-        <div className="bg-card rounded-lg p-8 border border-border shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-primary" />
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-input-background border-border focus:border-primary transition-all h-12"
-              />
-            </div>
+        <p className="text-sm text-muted-foreground text-center mb-6">
+          Login or create an account to continue
+        </p>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="flex items-center gap-2">
-                <Lock className="h-4 w-4 text-primary" />
-                Password
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="bg-input-background border-border focus:border-primary transition-all h-12"
-              />
-            </div>
+        <div className="space-y-4">
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
 
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="rounded border-border" />
-                <span className="text-muted-foreground">Remember me</span>
-              </label>
-              <button type="button" className="text-primary hover:underline">
-                Forgot password?
-              </button>
-            </div>
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
 
-            <Button
-              type="submit"
-              className="w-full bg-primary text-white hover:bg-primary/90 h-12"
-            >
-              Login
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <button
-                onClick={() => onNavigate('signup')}
-                className="text-primary hover:underline"
-              >
-                Sign up for free
-              </button>
+          {error && (
+            <p className="text-sm text-red-500">
+              {error}
             </p>
-          </div>
-        </div>
+          )}
 
-        {/* Trust indicators */}
-        <div className="mt-8 flex items-center justify-center gap-6 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Sparkles className="h-3 w-3" />
-            <span>Secure Login</span>
+          <Button
+            className="w-full"
+            onClick={handleEmailContinue}
+            disabled={loading || !email || !password}
+          >
+            {loading ? "Please wait..." : "Continue"}
+          </Button>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t" />
+            </div>
+            <div className="relative text-center text-sm text-muted-foreground bg-card px-2">
+              or
+            </div>
           </div>
-          <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-          <div className="flex items-center gap-1">
-            <Sparkles className="h-3 w-3" />
-            <span>256-bit Encryption</span>
-          </div>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleContinue}
+            disabled={loading}
+          >
+            Continue with Google
+          </Button>
         </div>
       </div>
     </div>

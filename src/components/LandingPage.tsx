@@ -11,7 +11,7 @@ export function LandingPage({ onNavigate, isLoggedIn }: LandingPageProps) {
     if (isLoggedIn) {
       onNavigate('dashboard');
     } else {
-      onNavigate('signup');
+      onNavigate('login');
     }
   };
 

@@ -1,5 +1,6 @@
-import { Check, Sparkles, Zap, Crown } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 interface PricingPageProps {
   onNavigate: (page: string) => void;
@@ -19,6 +20,8 @@ interface PricingPlan {
 }
 
 export function PricingPage({ onNavigate, isLoggedIn }: PricingPageProps) {
+  const { addCredits } = useAuth();
+
   const plans: PricingPlan[] = [
     {
       name: "Starter",
@@ -92,12 +95,14 @@ export function PricingPage({ onNavigate, isLoggedIn }: PricingPageProps) {
     }
   ];
 
-  const handleChoosePlan = (planName: string) => {
+  const handleChoosePlan = async (credits: number) => {
     if (!isLoggedIn) {
-      onNavigate('signup');
-    } else {
-      alert(`Purchase ${planName} credits - Payment integration would be implemented here`);
+      onNavigate("login");
+      return;
     }
+
+    await addCredits(credits);
+    onNavigate("dashboard");
   };
 
   return (
@@ -113,177 +118,68 @@ export function PricingPage({ onNavigate, isLoggedIn }: PricingPageProps) {
             Simple, Transparent Pricing
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Buy credits in packages that fit your needs. All packages include access to our 
-            AI-powered analysis framework and detailed insights.
+            Buy credits in packages that fit your needs. Each bill analysis uses 1 credit.
           </p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-3xl overflow-hidden transition-all duration-300 ${
-                plan.highlighted 
-                  ? "transform hover:scale-105 shadow-2xl" 
-                  : "hover:shadow-xl"
+              className={`relative rounded-3xl overflow-hidden transition-all ${
+                plan.highlighted ? "shadow-2xl scale-[1.02]" : "hover:shadow-xl"
               }`}
             >
-              {/* Background gradient */}
               <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-5`} />
-              
-              {/* Badge */}
+
               {plan.badge && (
-                <div className={`absolute top-0 left-0 right-0 h-10 ${plan.highlighted ? 'gradient-primary' : `bg-gradient-to-r ${plan.gradient}`} flex items-center justify-center`}>
-                  <div className="flex items-center gap-2 text-white text-sm">
-                    <Sparkles className="h-4 w-4" />
-                    <span>{plan.badge}</span>
-                  </div>
+                <div className="absolute top-0 inset-x-0 h-10 gradient-primary flex items-center justify-center text-white text-sm">
+                  {plan.badge}
                 </div>
               )}
-              
-              <div className={`relative bg-card border-2 rounded-3xl ${
-                plan.highlighted 
-                  ? "border-primary shadow-lg" 
-                  : "border-border"
-              } ${plan.badge ? 'pt-16 p-6' : 'p-6'}`}>
-                {/* Icon */}
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center text-2xl mb-4 shadow-lg`}>
+
+              <div
+                className={`relative bg-card border-2 rounded-3xl ${
+                  plan.highlighted ? "border-primary" : "border-border"
+                } ${plan.badge ? "pt-16 p-6" : "p-6"}`}
+              >
+                <div
+                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center text-2xl mb-4`}
+                >
                   {plan.icon}
                 </div>
 
-                {/* Price */}
                 <div className="mb-2">
-                  <span className="text-5xl text-foreground">
-                    {plan.price}
-                  </span>
+                  <span className="text-5xl">{plan.price}</span>
                 </div>
 
-                {/* Credits */}
-                <div className="mb-6">
-                  <p className="text-lg text-foreground">
-                    {plan.credits} {plan.credits === 1 ? 'Credit' : 'Credits'}
-                  </p>
-                </div>
+                <p className="mb-6 text-lg">
+                  {plan.credits} Credits
+                </p>
 
-                {/* Features */}
                 <ul className="space-y-2 mb-6">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <div className={`w-4 h-4 rounded-full bg-gradient-to-br ${plan.gradient} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                        <Check className="h-2.5 w-2.5 text-white" />
-                      </div>
-                      <span className="text-xs text-muted-foreground">{feature}</span>
+                  {plan.features.map((f, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-muted-foreground">
+                      <Check className="h-4 w-4 text-primary mt-0.5" />
+                      {f}
                     </li>
                   ))}
                 </ul>
 
-                {/* CTA Button */}
                 <Button
-                  className={`w-full h-11 border-0 shadow-lg hover:shadow-xl transition-all ${
+                  className={`w-full h-11 ${
                     plan.highlighted
-                      ? `gradient-primary text-white`
+                      ? "gradient-primary text-white"
                       : `bg-gradient-to-r ${plan.gradient} text-white`
                   }`}
-                  onClick={() => handleChoosePlan(plan.name)}
+                  onClick={() => handleChoosePlan(plan.credits)}
                 >
                   Buy Credits
                 </Button>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* FAQ */}
-        <div className="glass rounded-3xl border border-white/10 shadow-2xl p-10">
-          <h2 className="mb-8 text-center text-3xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <div className="p-6 bg-card rounded-2xl border border-border">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-                    <span className="text-white">?</span>
-                  </div>
-                  <div>
-                    <h4 className="mb-2">How do credits work?</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Each bill analysis uses one credit. Credits are valid for 12 months 
-                      from purchase date and can be used anytime during that period.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 bg-card rounded-2xl border border-border">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg gradient-secondary flex items-center justify-center flex-shrink-0">
-                    <span className="text-white">?</span>
-                  </div>
-                  <div>
-                    <h4 className="mb-2">Can I buy more credits?</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Yes, you can purchase additional credits at any time. Credits from all 
-                      purchases are combined and each has its own 12-month validity period.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="p-6 bg-card rounded-2xl border border-border">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center flex-shrink-0">
-                    <span className="text-white">?</span>
-                  </div>
-                  <div>
-                    <h4 className="mb-2">What formats are supported?</h4>
-                    <p className="text-sm text-muted-foreground">
-                      We support PDF and image files (JPG, PNG). The system can extract 
-                      data from both digital and scanned documents.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 bg-card rounded-2xl border border-border">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white">?</span>
-                  </div>
-                  <div>
-                    <h4 className="mb-2">Is my data secure?</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Yes, all data is encrypted in transit and at rest with bank-level security. 
-                      We never share your information with third parties.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <div className="glass rounded-3xl p-12 border border-white/10 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 animated-gradient opacity-10" />
-            <div className="relative z-10">
-              <h2 className="mb-4 text-3xl">Still have questions?</h2>
-              <p className="text-muted-foreground mb-6 text-lg">
-                Our team is here to help you choose the right package
-              </p>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-primary hover:bg-primary/10 h-12 px-8"
-              >
-                Contact Sales
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

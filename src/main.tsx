@@ -1,16 +1,18 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+
 import { BillProvider } from "./context/BillContext";
+import { AuthProvider } from "./context/AuthContext";
 
-const rootElement = document.getElementById("root");
+const root = document.getElementById("root");
 
-if (!rootElement) {
-  throw new Error("Root element not found");
-}
+if (!root) throw new Error("Root element missing");
 
-createRoot(rootElement).render(
-  <BillProvider>
-    <App />
-  </BillProvider>
+createRoot(root).render(
+  <AuthProvider>
+    <BillProvider>
+      <App />
+    </BillProvider>
+  </AuthProvider>
 );
