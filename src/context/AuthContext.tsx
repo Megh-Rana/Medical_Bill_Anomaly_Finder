@@ -72,8 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const snap = await getDoc(ref);
 
       if (!snap.exists()) {
-        await setDoc(ref, { credits: 10 });
-        setUserData({ credits: 10 });
+        await setDoc(ref, { credits: 5 });
+        setUserData({ credits: 5 });
       } else {
         setUserData(snap.data() as UserData);
       }
