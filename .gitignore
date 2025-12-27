@@ -37,3 +37,4 @@ coverage
 
 # Backend
 backend/__pycache__
+backend/anomalies/__pycache__
