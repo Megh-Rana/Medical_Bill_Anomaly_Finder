@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { useBill } from "@/context/BillContext";
 import { useAuth } from "@/context/AuthContext";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface ProcessingPageProps {
   onNavigate: (page: string) => void;
@@ -14,19 +16,18 @@ async function analyzeBill(items: any[]) {
     body: JSON.stringify({ items })
   });
 
-  if (!res.ok) {
-    throw new Error("Analysis failed");
-  }
-
+  if (!res.ok) throw new Error("Analysis failed");
   return res.json();
 }
 
 export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
-  const { billItems, setAnalysis } = useBill();
-  const { userData, consumeCredit } = useAuth();
+  const { billItems, setAnalysis, billName } = useBill();
+  const { user, userData, consumeCredit } = useAuth();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
-  const creditUsedRef = useRef(false);
+
+  const hasRunRef = useRef(false);
 
   const steps = [
     { label: "Finding anomalies", icon: "🔍" },
@@ -36,58 +37,70 @@ export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
   ];
 
   useEffect(() => {
-    let mounted = true;
-
-    // 🚫 HARD BLOCK if no credits
-    if (!userData || userData.credits < 1) {
+    if (!user || !userData || userData.credits < 1) {
       onNavigate("pricing");
       return;
     }
 
-    // Step animation
-    const stepInterval = setInterval(() => {
+    if (hasRunRef.current) return;
+    hasRunRef.current = true;
+
+    let mounted = true;
+
+    const stepTimer = setInterval(() => {
       setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     }, 1200);
 
-    const progressInterval = setInterval(() => {
+    const progressTimer = setInterval(() => {
       setProgress(prev => Math.min(prev + 1, 95));
     }, 60);
 
-    async function runAnalysis() {
+    async function run() {
       try {
         const result = await analyzeBill(billItems);
         if (!mounted) return;
 
+        // 1️⃣ store in context
         setAnalysis(result);
-        setProgress(100);
 
-        if (!creditUsedRef.current) {
-          await consumeCredit(1);
-          creditUsedRef.current = true;
-        }
+        // 2️⃣ deduct credit
+        await consumeCredit(1);
+
+        // 3️⃣ store FULL result in Firestore
+        await addDoc(collection(db, "users", user.uid, "analyses"), {
+          createdAt: serverTimestamp(),
+          billName: billName.trim() || "Untitled Bill",
+          status: "Completed",
+          itemCount: billItems.length,
+          result
+        });
+
+        setProgress(100);
 
         setTimeout(() => {
           onNavigate("results");
         }, 600);
-      } catch (err) {
-        console.error(err);
+      } catch (e) {
+        console.error(e);
         onNavigate("bill-entry");
       }
     }
 
-    runAnalysis();
+    run();
 
     return () => {
       mounted = false;
-      clearInterval(stepInterval);
-      clearInterval(progressInterval);
+      clearInterval(stepTimer);
+      clearInterval(progressTimer);
     };
-  }, [billItems, onNavigate, setAnalysis, consumeCredit, userData]);
+  }, []);
+
+  /* ======= UI (unchanged styling) ======= */
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-2xl w-full">
-        <div className="bg-card rounded-lg p-10 border border-border shadow-sm">
+        <div className="bg-card rounded-lg p-10 border shadow-sm">
           <div className="text-center mb-10">
             <div className="mx-auto w-20 h-20 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
               <Loader2 className="h-10 w-10 text-primary animate-spin" />
@@ -99,48 +112,48 @@ export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
           </div>
 
           <div className="mb-10">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Progress</span>
-              <span className="text-sm text-primary">{progress}%</span>
+            <div className="flex justify-between mb-2 text-sm">
+              <span className="text-muted-foreground">Progress</span>
+              <span className="text-primary">{progress}%</span>
             </div>
-            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+            <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-primary transition-all duration-300 rounded-full"
+                className="h-full bg-primary transition-all"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
 
           <div className="space-y-3 mb-8">
-            {steps.map((step, index) => (
+            {steps.map((s, i) => (
               <div
-                key={index}
-                className={`p-4 rounded-lg border transition-all duration-500 ${
-                  index === currentStep
+                key={i}
+                className={`p-4 rounded-lg border ${
+                  i === currentStep
                     ? "bg-primary/5 border-primary"
-                    : index < currentStep
+                    : i < currentStep
                     ? "bg-success/10 border-success/30"
-                    : "bg-card border-border"
+                    : "bg-card"
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="text-2xl">
-                    {index < currentStep ? "✓" : step.icon}
-                  </div>
-                  <span className="text-sm">{step.label}</span>
-                  {index === currentStep && (
-                    <Loader2 className="h-5 w-5 text-primary animate-spin ml-auto" />
+                  <span className="text-2xl">
+                    {i < currentStep ? "✓" : s.icon}
+                  </span>
+                  <span className="text-sm">{s.label}</span>
+                  {i === currentStep && (
+                    <Loader2 className="ml-auto h-5 w-5 animate-spin text-primary" />
                   )}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="bg-primary/5 rounded-lg p-5 border border-primary/20">
+          <div className="bg-primary/5 rounded-lg p-5 border">
             <div className="flex gap-3">
-              <Sparkles className="h-5 w-5 text-primary mt-0.5" />
+              <Sparkles className="h-5 w-5 text-primary mt-1" />
               <p className="text-sm text-muted-foreground">
-                Your data is being securely analyzed against standard billing patterns.
+                Your bill is securely analyzed against standard billing patterns.
               </p>
             </div>
           </div>

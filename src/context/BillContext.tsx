@@ -14,33 +14,54 @@ export type AnalysisResult = {
 };
 
 type BillContextType = {
+  // bill items
   billItems: BillItem[];
   setBillItems: React.Dispatch<React.SetStateAction<BillItem[]>>;
 
+  // bill name
+  billName: string;
+  setBillName: React.Dispatch<React.SetStateAction<string>>;
+
+  // analysis result
   analysis: AnalysisResult | null;
   setAnalysis: React.Dispatch<React.SetStateAction<AnalysisResult | null>>;
 
+  // declared total
   declaredTotal: number | null;
   setDeclaredTotal: React.Dispatch<React.SetStateAction<number | null>>;
+
+  resetBill: () => void;
 };
 
 const BillContext = createContext<BillContextType | null>(null);
 
 export function BillProvider({ children }: { children: React.ReactNode }) {
   const [billItems, setBillItems] = useState<BillItem[]>([]);
+  const [billName, setBillName] = useState<string>("");
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-
   const [declaredTotal, setDeclaredTotal] = useState<number | null>(null);
 
+  const resetBill = () => {
+    setBillItems([]);
+    setAnalysis(null);
+    setBillName("");
+  };
   return (
     <BillContext.Provider
       value={{
         billItems,
         setBillItems,
+
+        billName,
+        setBillName,
+
         analysis,
         setAnalysis,
+
         declaredTotal,
-        setDeclaredTotal
+        setDeclaredTotal,
+
+        resetBill
       }}
     >
       {children}

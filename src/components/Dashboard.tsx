@@ -8,6 +8,18 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  doc,
+  getDoc,
+  Timestamp
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useBill } from "@/context/BillContext";
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -15,36 +27,46 @@ interface DashboardProps {
 
 interface AnalysisRecord {
   id: string;
-  date: string;
   billName: string;
   status: "Completed" | "Processing" | "Needs Review";
+  createdAt?: Timestamp;
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
   const { user, userData } = useAuth();
-
   const credits = userData?.credits ?? 0;
 
-  const mockAnalyses: AnalysisRecord[] = [
-    {
-      id: "1",
-      date: "Dec 10, 2024",
-      billName: "General Consultation - City Hospital",
-      status: "Completed"
-    },
-    {
-      id: "2",
-      date: "Nov 28, 2024",
-      billName: "Lab Tests - Medical Center",
-      status: "Needs Review"
-    },
-    {
-      id: "3",
-      date: "Nov 15, 2024",
-      billName: "Emergency Visit - Regional Hospital",
-      status: "Completed"
-    }
-  ];
+  const [analyses, setAnalyses] = useState<AnalysisRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const { setAnalysis } = useBill();
+  const { resetBill } = useBill();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchAnalyses = async () => {
+      try {
+        const q = query(
+          collection(db, "users", user.uid, "analyses"),
+          orderBy("createdAt", "desc")
+        );
+
+        const snap = await getDocs(q);
+
+        const data = snap.docs.map(d => ({
+          id: d.id,
+          ...(d.data() as any)
+        }));
+
+        setAnalyses(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalyses();
+  }, [user]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -64,12 +86,31 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       onNavigate("pricing");
       return;
     }
+    resetBill();
     onNavigate("bill-entry");
+  };
+
+  const handleViewAnalysis = async (analysisId: string) => {
+    if (!user) return;
+
+    const ref = doc(db, "users", user.uid, "analyses", analysisId);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+
+    // 🔑 push analysis result into context
+    setAnalysis(data.result);
+
+    // 🔑 navigate to real results page
+    onNavigate("results");
   };
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+
         {/* Welcome */}
         <div className="mb-12">
           <h1 className="mb-2">Welcome back</h1>
@@ -78,6 +119,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </p>
         </div>
 
+        {/* Top cards */}
         <div className="grid lg:grid-cols-3 gap-6 mb-8">
           {/* Credits */}
           <div className="bg-card rounded-lg border p-6 shadow-sm">
@@ -136,30 +178,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               </div>
               <h3 className="mb-2">Total Analyses</h3>
               <p className="text-4xl text-secondary">
-                {mockAnalyses.length}
+                {analyses.length}
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-card p-6 border rounded-lg">
-            <Activity className="mb-2 text-success" />
-            <p className="text-sm text-muted-foreground">This Month</p>
-            <p className="text-2xl">3 analyses</p>
-          </div>
-
-          <div className="bg-card p-6 border rounded-lg">
-            <TrendingUp className="mb-2 text-accent" />
-            <p className="text-sm text-muted-foreground">Avg. Processing</p>
-            <p className="text-2xl">4.2 min</p>
-          </div>
-
-          <div className="bg-card p-6 border rounded-lg">
-            <Eye className="mb-2 text-secondary" />
-            <p className="text-sm text-muted-foreground">Insights Found</p>
-            <p className="text-2xl">12 total</p>
           </div>
         </div>
 
@@ -172,48 +193,58 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             </p>
           </div>
 
-          <table className="w-full">
-            <thead className="bg-muted/10 border-b">
-              <tr>
-                <th className="p-4 text-left text-sm">Date</th>
-                <th className="p-4 text-left text-sm">Bill</th>
-                <th className="p-4 text-left text-sm">Status</th>
-                <th className="p-4 text-left text-sm">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockAnalyses.map((a, i) => (
-                <tr
-                  key={a.id}
-                  className={`border-t ${
-                    i % 2 ? "bg-muted/5" : ""
-                  }`}
-                >
-                  <td className="p-4 text-sm">{a.date}</td>
-                  <td className="p-4">{a.billName}</td>
-                  <td className="p-4">
-                    <span
-                      className={`px-3 py-1 text-xs rounded-full border ${getStatusColor(
-                        a.status
-                      )}`}
-                    >
-                      {a.status}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onNavigate("results")}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      View
-                    </Button>
-                  </td>
+          {loading ? (
+            <p className="p-6 text-muted-foreground">Loading analyses…</p>
+          ) : analyses.length === 0 ? (
+            <p className="p-6 text-muted-foreground">
+              No analyses yet. Start your first one.
+            </p>
+          ) : (
+            <table className="w-full">
+              <thead className="bg-muted/10 border-b">
+                <tr>
+                  <th className="p-4 text-left text-sm">Date</th>
+                  <th className="p-4 text-left text-sm">Bill</th>
+                  <th className="p-4 text-left text-sm">Status</th>
+                  <th className="p-4 text-left text-sm">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {analyses.map((a, i) => (
+                  <tr
+                    key={a.id}
+                    className={`border-t ${i % 2 ? "bg-muted/5" : ""}`}
+                  >
+                    <td className="p-4 text-sm">
+                      {a.createdAt
+                        ? a.createdAt.toDate().toLocaleDateString()
+                        : "—"}
+                    </td>
+                    <td className="p-4">{a.billName}</td>
+                    <td className="p-4">
+                      <span
+                        className={`px-3 py-1 text-xs rounded-full border ${getStatusColor(
+                          a.status
+                        )}`}
+                      >
+                        {a.status}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleViewAnalysis(a.id)}
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        View
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ interface BillEntryPageProps {
 }
 
 export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
-  const { setBillItems } = useBill();
+  const { setBillItems, billName, setBillName } = useBill();
 
   const [items, setItems] = useState<BillItem[]>([
     { id: 1, name: "", unit_price: "", quantity: "", total_price: "" }
@@ -75,6 +75,15 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
             Enter values exactly as shown on the hospital bill.  
             Totals may differ from unit × quantity.
           </p>
+        </div>
+
+        {/* Bill name (NEW, styling untouched) */}
+        <div>
+          <Input
+            placeholder="Bill name (e.g. Apollo Hospital – Blood Tests)"
+            value={billName}
+            onChange={e => setBillName(e.target.value)}
+          />
         </div>
 
         {/* Table */}
