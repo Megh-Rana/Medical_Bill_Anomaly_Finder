@@ -26,9 +26,10 @@ export function LandingPage({ onNavigate, isLoggedIn }: LandingPageProps) {
             </div>
             
             <h1 className="mb-6 text-5xl sm:text-6xl lg:text-7xl text-foreground">
-              A smarter way to review <br/>medical bills
+            BillDrishti <br/>
             </h1>
-            
+            <h2 className="mb-6 text-3xl sm:text-4xl lg:text-5xl font-normal text-foreground">
+              A smarter way to review <br/>medical bills </h2>
             <p className="text-muted-foreground mb-10 max-w-2xl mx-auto text-lg leading-relaxed">
               Understand medical billing patterns through structured analysis. Get clear insights in minutes.
             </p>
@@ -172,7 +173,7 @@ export function LandingPage({ onNavigate, isLoggedIn }: LandingPageProps) {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="mb-4">
-              Why MBAF Exists
+              Why BillDrishti Exists
             </h2>
           </div>
           
@@ -217,7 +218,7 @@ export function LandingPage({ onNavigate, isLoggedIn }: LandingPageProps) {
               Ready to get started?
             </h2>
             <p className="text-muted-foreground mb-8 text-lg">
-              Join thousands of users who trust MBAF for bill analysis
+              Join thousands of users who trust BillDrishti for bill analysis
             </p>
             <Button
               size="lg"

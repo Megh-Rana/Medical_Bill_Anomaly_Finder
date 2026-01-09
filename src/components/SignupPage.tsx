@@ -31,7 +31,7 @@ export function SignupPage({ onNavigate, onLogin }: SignupPageProps) {
           </div>
           <h2 className="mb-2">Create an account</h2>
           <p className="text-muted-foreground">
-            Get started with MBAF today - it's free!
+            Get started with BillDrishti today - it's free!
           </p>
         </div>
 
