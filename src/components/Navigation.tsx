@@ -35,9 +35,9 @@ export function Navigation({
               className="group flex items-center gap-2"
             >
               <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-white text-xl">M</span>
+                <span className="text-white text-xl">BD</span>
               </div>
-              <span className="text-xl text-foreground">MBAF</span>
+              <span className="text-xl text-foreground">BillDrishti</span>
             </button>
 
             {isLoggedIn && (
