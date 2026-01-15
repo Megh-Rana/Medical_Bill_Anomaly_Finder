@@ -4,9 +4,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
+import json
+import os
 
 from anomalies.engine import detect_all_anomalies
 from anomalies.category import infer_category
+
+# Global variable to store medicine database
+MEDICINE_DB = {}
 
 app = FastAPI()
 
@@ -41,3 +46,37 @@ def analyze_bill(payload: AnalyzeRequest):
         "classified_items": items,
         "anomalies": anomalies
     }
+
+@app.on_event("startup")
+def load_medicine_data():
+    """
+    Load medicine database into memory on startup.
+    """
+    global MEDICINE_DB
+    file_path = os.path.join(os.path.dirname(__file__), "data", "medicine_database.json")
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            MEDICINE_DB = json.load(f)
+        print(f"✅ Loaded {len(MEDICINE_DB)} medicines into memory.")
+    else:
+        print(f"⚠️ Warning: {file_path} not found. Autocomplete will be empty.")
+
+@app.get("/medicines/search")
+def search_medicines(q: str = ""):
+    """
+    Search for medicines by name. Returns top 20 matches.
+    Case-insensitive substring search.
+    """
+    if not q or len(q) < 2:
+        return []
+    
+    query = q.lower()
+    results = []
+    
+    for key, val in MEDICINE_DB.items():
+        if query in key:  # key is already lowercase
+            results.append(val["name"])
+            if len(results) >= 20:
+                break
+    
+    return results
