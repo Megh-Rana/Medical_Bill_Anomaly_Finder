@@ -3,6 +3,7 @@ import { Plus, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useBill } from "@/context/BillContext";
+import { AutocompleteInput } from "./AutocompleteInput";
 
 interface BillItem {
   id: number;
@@ -72,7 +73,7 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
         <div>
           <h1 className="text-3xl mb-2">Enter Bill Details</h1>
           <p className="text-muted-foreground">
-            Enter values exactly as shown on the hospital bill.  
+            Enter values exactly as shown on the hospital bill.
             Totals may differ from unit × quantity.
           </p>
         </div>
@@ -110,11 +111,11 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
                   </td>
 
                   <td className="p-4">
-                    <Input
+                    <AutocompleteInput
                       placeholder="e.g. Crocin 500 Tablet"
                       value={item.name}
-                      onChange={e =>
-                        handleChange(item.id, "name", e.target.value)
+                      onChange={(value) =>
+                        handleChange(item.id, "name", value)
                       }
                     />
                   </td>

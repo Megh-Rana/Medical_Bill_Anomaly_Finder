@@ -64,7 +64,7 @@ export function LandingPage({ onNavigate, isLoggedIn }: LandingPageProps) {
                 <div className="text-sm text-muted-foreground">Accuracy Rate</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl mb-1 text-accent">5min</div>
+                <div className="text-3xl mb-1 text-accent">~1min</div>
                 <div className="text-sm text-muted-foreground">Avg. Analysis</div>
               </div>
             </div>
