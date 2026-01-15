@@ -65,18 +65,24 @@ def load_medicine_data():
 def search_medicines(q: str = ""):
     """
     Search for medicines by name. Returns top 20 matches.
+    Prioritizes medicines that start with query over those that contain it.
     Case-insensitive substring search.
     """
     if not q or len(q) < 2:
         return []
     
     query = q.lower()
-    results = []
+    starts_with = []
+    contains = []
     
     for key, val in MEDICINE_DB.items():
-        if query in key:  # key is already lowercase
-            results.append(val["name"])
-            if len(results) >= 20:
+        if key.startswith(query):
+            starts_with.append(val["name"])
+            if len(starts_with) >= 20:
                 break
+        elif query in key:
+            contains.append(val["name"])
     
-    return results
+    # Combine: starts-with results first, then contains results
+    results = starts_with + contains
+    return results[:20]

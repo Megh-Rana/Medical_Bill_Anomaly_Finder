@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Input } from "./ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "./ui/utils";
 
 interface AutocompleteInputProps {
     value: string;
@@ -30,16 +30,17 @@ export function AutocompleteInput({
             }
 
             try {
-                const response = await fetch(
-                    `http://localhost:8000/medicines/search?q=${encodeURIComponent(value)}`
-                );
+                const url = `http://localhost:8000/medicines/search?q=${encodeURIComponent(value)}`;
+
+                const response = await fetch(url);
+
                 if (response.ok) {
                     const data = await response.json();
                     setSuggestions(data);
                     setShowSuggestions(data.length > 0);
                 }
             } catch (error) {
-                console.error("Failed to fetch suggestions:", error);
+                console.error("AutocompleteInput: Failed to fetch suggestions:", error);
                 setSuggestions([]);
             }
         };
@@ -107,7 +108,15 @@ export function AutocompleteInput({
             />
 
             {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-md max-h-60 overflow-auto">
+                <div
+                    className="fixed z-[9999] mt-1 bg-popover border rounded-md shadow-lg max-h-60 overflow-auto"
+                    style={{
+                        top: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().bottom + window.scrollY : 0,
+                        left: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().left + window.scrollX : 0,
+                        width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width : 'auto',
+                        minWidth: '300px'
+                    }}
+                >
                     {suggestions.map((suggestion, index) => (
                         <div
                             key={index}
