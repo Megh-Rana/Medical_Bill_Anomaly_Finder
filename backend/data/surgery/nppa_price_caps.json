@@ -1,0 +1,145 @@
+{
+    "_metadata": {
+        "source": "National Pharmaceutical Pricing Authority (NPPA) Official Notifications",
+        "last_updated": "2025-04-01",
+        "notes": "Prices revised annually based on Wholesale Price Index (WPI). GST may be added if applicable."
+    },
+    "nppa_regulated_devices": {
+        "coronary_stents": {
+            "category": "cardiovascular",
+            "notification": "S.O. 1473(E) dated March 27, 2025",
+            "effective_date": "2025-04-01",
+            "price_caps": {
+                "bare_metal_stent": {
+                    "max_price": 10693,
+                    "description": "Bare Metal Stent (BMS)",
+                    "previous_price": 10510
+                },
+                "drug_eluting_stent": {
+                    "max_price": 38933,
+                    "description": "Drug Eluting Stent (DES) including metallic DES",
+                    "previous_price": 38267
+                },
+                "bioresorbable_stent": {
+                    "max_price": 38933,
+                    "description": "Bioresorbable Vascular Scaffold (BVS) / Biodegradable Stent",
+                    "previous_price": 38267
+                }
+            },
+            "keywords": [
+                "stent",
+                "coronary stent",
+                "DES",
+                "BMS",
+                "drug eluting",
+                "bare metal",
+                "bioresorbable",
+                "BVS"
+            ],
+            "source_url": "https://nppaindia.nic.in"
+        },
+        "knee_implants": {
+            "category": "orthopedic",
+            "notification": "S.O. 3869(E) dated September 10, 2024",
+            "effective_date": "2024-09-10",
+            "valid_until": "2026-11-15",
+            "price_caps": {
+                "primary_with_patella": {
+                    "max_price": 5444,
+                    "description": "Primary knee replacement system with patella component (per unit)"
+                },
+                "revision_femoral": {
+                    "max_price": 83547,
+                    "description": "Revision knee replacement system with femoral component"
+                },
+                "cruciate_retaining": {
+                    "max_price": 54720,
+                    "description": "Cruciate Retaining Knee System (original 2017 cap)"
+                },
+                "posterior_stabilized": {
+                    "max_price": 54720,
+                    "description": "Posterior Stabilized Knee System (original 2017 cap)"
+                },
+                "unicondylar": {
+                    "max_price": 43220,
+                    "description": "Unicondylar/Unicompartmental Knee (original 2017 cap)"
+                },
+                "oxidized_zirconium": {
+                    "max_price": 76600,
+                    "description": "Special Alloy (Oxinium) Knee (original 2017 cap)"
+                }
+            },
+            "keywords": [
+                "knee implant",
+                "knee prosthesis",
+                "TKR implant",
+                "knee replacement implant",
+                "tibial",
+                "femoral",
+                "patellar"
+            ],
+            "notes": "First capped on August 16, 2017 via DPCO 2013. Prices reduced by up to 69% from pre-regulation levels."
+        },
+        "hip_implants": {
+            "category": "orthopedic",
+            "notification": "S.O. 2659(E) dated August 16, 2017",
+            "effective_date": "2017-08-16",
+            "price_caps": {
+                "partial_cemented": {
+                    "max_price": 29410,
+                    "description": "Partial Hip Replacement - Cemented"
+                },
+                "partial_cementless": {
+                    "max_price": 35120,
+                    "description": "Partial Hip Replacement - Cementless"
+                },
+                "total_cemented": {
+                    "max_price": 52170,
+                    "description": "Total Hip Replacement - Cemented"
+                },
+                "total_hybrid": {
+                    "max_price": 62530,
+                    "description": "Total Hip Replacement - Hybrid"
+                },
+                "total_cementless": {
+                    "max_price": 75490,
+                    "description": "Total Hip Replacement - Cementless"
+                }
+            },
+            "keywords": [
+                "hip implant",
+                "hip prosthesis",
+                "THR implant",
+                "hip replacement implant",
+                "femoral stem",
+                "acetabular cup"
+            ],
+            "notes": "Classified as 'drugs' by MoHFW on October 6, 2005, enabling DPCO regulation."
+        }
+    },
+    "room_category_markup_rule": {
+        "allowed": false,
+        "description": "Hospitals CANNOT charge different prices for implants based on room category. This is illegal per NPPA guidelines.",
+        "applicable_to": [
+            "coronary stents",
+            "knee implants",
+            "hip implants",
+            "all NPPA regulated devices"
+        ],
+        "violation_severity": "critical",
+        "legal_reference": "NPPA notification prohibiting differential pricing of orthopedic implants based on room category"
+    },
+    "implant_specification_requirements": {
+        "mandatory_details": [
+            "manufacturer_name",
+            "implant_model",
+            "implant_type",
+            "serial_number",
+            "batch_number"
+        ],
+        "violation_for_missing": {
+            "severity": "high",
+            "reason": "Unspecified high-end implant billing without model details enables overcharging"
+        }
+    }
+}

@@ -1,0 +1,120 @@
+{
+    "bundling_rules": {
+        "laparoscopic_surgery": {
+            "applies_to": [
+                "laparoscopic",
+                "lap chole",
+                "lap appendectomy",
+                "lap hernia",
+                "laparoscopy"
+            ],
+            "bundled_items": [
+                "laparoscopy kit",
+                "laparoscopic kit",
+                "OT charges",
+                "operation theatre",
+                "anesthesia gases",
+                "video tower",
+                "video tower usage",
+                "CO2 insufflation",
+                "CO2 gas",
+                "monitors",
+                "monitor charges",
+                "trocar",
+                "trocars",
+                "laparoscopic instruments",
+                "light source",
+                "camera head"
+            ],
+            "alert_message": "This item is typically included in laparoscopic surgery package",
+            "severity": "high"
+        },
+        "cardiac_surgery_on_pump": {
+            "applies_to": [
+                "CABG",
+                "valve replacement",
+                "cardiac bypass",
+                "on-pump",
+                "open heart"
+            ],
+            "bundled_items": [
+                "heart-lung machine",
+                "HLM charges",
+                "oxygenator",
+                "perfusionist charges",
+                "perfusion charges",
+                "cardioplegia solution",
+                "cardioplegia",
+                "CPB circuit",
+                "cardiopulmonary bypass",
+                "arterial filter",
+                "venous reservoir"
+            ],
+            "alert_message": "Cardiac surgery consumables should be part of package pricing",
+            "severity": "critical"
+        },
+        "cataract_surgery": {
+            "applies_to": [
+                "cataract",
+                "phaco",
+                "phacoemulsification",
+                "IOL implant"
+            ],
+            "bundled_items": [
+                "viscoelastic",
+                "OT charges",
+                "OT consumables",
+                "eye drops post-op",
+                "microscope charges",
+                "phaco tip",
+                "irrigation solution"
+            ],
+            "alert_message": "Standard cataract surgery consumable - check if already in package",
+            "severity": "medium"
+        },
+        "joint_replacement": {
+            "applies_to": [
+                "knee replacement",
+                "hip replacement",
+                "TKR",
+                "THR",
+                "arthroplasty"
+            ],
+            "bundled_items": [
+                "OT charges",
+                "bone cement",
+                "surgical saw blade",
+                "pulse lavage",
+                "drainage system",
+                "DVT prophylaxis",
+                "initial physiotherapy"
+            ],
+            "alert_message": "Standard joint replacement consumable - typically bundled",
+            "severity": "medium"
+        },
+        "angioplasty": {
+            "applies_to": [
+                "PTCA",
+                "angioplasty",
+                "PCI",
+                "stenting"
+            ],
+            "bundled_items": [
+                "cath lab charges",
+                "diagnostic angiography",
+                "guide wire",
+                "guide catheter",
+                "balloon catheter",
+                "introducer sheath",
+                "manifold",
+                "contrast dye"
+            ],
+            "alert_message": "Interventional cardiology consumable - check package inclusion",
+            "severity": "high"
+        }
+    },
+    "notes": {
+        "package_detection": "If bill contains a 'package' or 'surgery charges' line item, any bundled item billed separately is suspicious",
+        "threshold": "Allow one or two minor bundled items separately only if hospital provides itemized justification"
+    }
+}

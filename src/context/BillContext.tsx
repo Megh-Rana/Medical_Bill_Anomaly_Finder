@@ -11,6 +11,17 @@ export type BillItem = {
 export type AnalysisResult = {
   classified_items: BillItem[];
   anomalies: any[];
+  procedure_context?: any;
+};
+
+// Surgery context for tier-based pricing
+export type SurgeryContext = {
+  billType: "medicine" | "surgery";
+  hospitalName: string;
+  hospitalCity: string;
+  hospitalAccreditation: "none" | "nabh" | "jci";
+  primarySurgery: string;
+  roomCategory: string;
 };
 
 type BillContextType = {
@@ -21,6 +32,10 @@ type BillContextType = {
   // bill name
   billName: string;
   setBillName: React.Dispatch<React.SetStateAction<string>>;
+
+  // surgery context
+  surgeryContext: SurgeryContext;
+  setSurgeryContext: React.Dispatch<React.SetStateAction<SurgeryContext>>;
 
   // analysis result
   analysis: AnalysisResult | null;
@@ -33,6 +48,15 @@ type BillContextType = {
   resetBill: () => void;
 };
 
+const defaultSurgeryContext: SurgeryContext = {
+  billType: "medicine",
+  hospitalName: "",
+  hospitalCity: "",
+  hospitalAccreditation: "none",
+  primarySurgery: "",
+  roomCategory: "",
+};
+
 const BillContext = createContext<BillContextType | null>(null);
 
 export function BillProvider({ children }: { children: React.ReactNode }) {
@@ -40,11 +64,13 @@ export function BillProvider({ children }: { children: React.ReactNode }) {
   const [billName, setBillName] = useState<string>("");
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [declaredTotal, setDeclaredTotal] = useState<number | null>(null);
+  const [surgeryContext, setSurgeryContext] = useState<SurgeryContext>(defaultSurgeryContext);
 
   const resetBill = () => {
     setBillItems([]);
     setAnalysis(null);
     setBillName("");
+    setSurgeryContext(defaultSurgeryContext);
   };
   return (
     <BillContext.Provider
@@ -54,6 +80,9 @@ export function BillProvider({ children }: { children: React.ReactNode }) {
 
         billName,
         setBillName,
+
+        surgeryContext,
+        setSurgeryContext,
 
         analysis,
         setAnalysis,
@@ -76,3 +105,4 @@ export function useBill() {
   }
   return ctx;
 }
+

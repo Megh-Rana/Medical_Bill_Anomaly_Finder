@@ -1,0 +1,202 @@
+{
+    "incompatible_pairs": [
+        {
+            "item1_patterns": [
+                "laser hemorrhoidectomy",
+                "laser piles",
+                "LHP",
+                "laser hemorrhoid"
+            ],
+            "item2_patterns": [
+                "stapler gun",
+                "stapler hemorrhoidectomy",
+                "PPH stapler",
+                "PPH device"
+            ],
+            "reason": "Laser and stapler are mutually exclusive surgical techniques for hemorrhoids. Hospital cannot use both.",
+            "severity": "critical",
+            "category": "proctology"
+        },
+        {
+            "item1_patterns": [
+                "laparoscopic",
+                "lap chole",
+                "lap appendectomy",
+                "lap hernia",
+                "minimally invasive"
+            ],
+            "item2_patterns": [
+                "open surgery retractor",
+                "balfour retractor",
+                "self-retaining retractor",
+                "abdominal retractor set"
+            ],
+            "reason": "Laparoscopic (keyhole) surgery does not use large abdominal retractors. These are for open surgery only.",
+            "severity": "critical",
+            "category": "general_surgery"
+        },
+        {
+            "item1_patterns": [
+                "off-pump CABG",
+                "OPCAB",
+                "beating heart surgery",
+                "off pump cardiac"
+            ],
+            "item2_patterns": [
+                "oxygenator",
+                "heart-lung machine",
+                "CPB circuit",
+                "cardiopulmonary bypass"
+            ],
+            "reason": "Off-pump surgery specifically avoids heart-lung machine. This is a fundamental contradiction.",
+            "severity": "critical",
+            "category": "cardiac"
+        },
+        {
+            "item1_patterns": [
+                "off-pump CABG",
+                "OPCAB",
+                "beating heart surgery"
+            ],
+            "item2_patterns": [
+                "perfusionist charges",
+                "perfusion charges",
+                "perfusionist fee"
+            ],
+            "reason": "Off-pump surgery does not require a perfusionist as no cardiopulmonary bypass is used.",
+            "severity": "critical",
+            "category": "cardiac"
+        },
+        {
+            "item1_patterns": [
+                "SMILE",
+                "small incision lenticule",
+                "flapless LASIK",
+                "SMILE surgery"
+            ],
+            "item2_patterns": [
+                "flap creation",
+                "microkeratome blade",
+                "keratome blade",
+                "flap",
+                "LASIK flap"
+            ],
+            "reason": "SMILE is a flapless procedure. No corneal flap is created, so no keratome or flap charges apply.",
+            "severity": "high",
+            "category": "ophthalmology"
+        },
+        {
+            "item1_patterns": [
+                "LASIK"
+            ],
+            "item2_patterns": [
+                "SMILE",
+                "small incision lenticule"
+            ],
+            "reason": "LASIK and SMILE are different refractive surgery techniques. Cannot have both in same session.",
+            "severity": "critical",
+            "category": "ophthalmology"
+        },
+        {
+            "item1_patterns": [
+                "vaginal hysterectomy",
+                "NDVH",
+                "non-descent vaginal hysterectomy"
+            ],
+            "item2_patterns": [
+                "laparoscopy kit",
+                "trocars",
+                "CO2 insufflation",
+                "laparoscopic instruments"
+            ],
+            "reason": "Vaginal hysterectomy is performed through vaginal route, not laparoscopically.",
+            "severity": "high",
+            "category": "gynecology"
+        },
+        {
+            "item1_patterns": [
+                "spinal anesthesia",
+                "regional anesthesia",
+                "epidural"
+            ],
+            "item2_patterns": [
+                "GA charges",
+                "general anesthesia",
+                "intubation charges",
+                "ventilator (intra-op)"
+            ],
+            "reason": "Spinal/epidural and general anesthesia are typically alternatives, not used together except in specific cases.",
+            "severity": "medium",
+            "category": "anesthesia",
+            "note": "Some complex surgeries may legitimately use combined techniques - flag for review only"
+        },
+        {
+            "item1_patterns": [
+                "unilateral knee replacement",
+                "single knee",
+                "one knee TKR"
+            ],
+            "item2_patterns": [
+                "bilateral knee implant",
+                "two knee implants",
+                "double knee prosthesis"
+            ],
+            "reason": "Unilateral surgery uses one implant. Billing for bilateral implants in unilateral procedure.",
+            "severity": "critical",
+            "category": "orthopedics"
+        },
+        {
+            "item1_patterns": [
+                "robotic surgery",
+                "da vinci",
+                "robotic-assisted"
+            ],
+            "item2_patterns": [
+                "manual laparoscopic",
+                "conventional laparoscopy"
+            ],
+            "reason": "Cannot bill both manual laparoscopy and robotic surgery for same procedure.",
+            "severity": "high",
+            "category": "robotic"
+        },
+        {
+            "item1_patterns": [
+                "daycare procedure",
+                "daycare surgery",
+                "same day discharge"
+            ],
+            "item2_patterns": [
+                "ICU charges",
+                "ICU bed",
+                "intensive care"
+            ],
+            "reason": "Daycare procedures by definition do not require ICU admission.",
+            "severity": "high",
+            "category": "billing"
+        },
+        {
+            "item1_patterns": [
+                "local anesthesia only",
+                "LA procedure",
+                "under local"
+            ],
+            "item2_patterns": [
+                "anesthesia machine",
+                "ventilator",
+                "GA drugs",
+                "muscle relaxants"
+            ],
+            "reason": "Local anesthesia procedures don't require general anesthesia equipment.",
+            "severity": "medium",
+            "category": "anesthesia"
+        }
+    ],
+    "notes": {
+        "matching": "Use fuzzy matching or containment check on normalized item names",
+        "severity_levels": {
+            "critical": "Almost certainly fraud or gross error - requires immediate escalation",
+            "high": "Very likely billing error - needs review",
+            "medium": "Suspicious but may have legitimate edge cases - flag for review"
+        }
+    }
+}

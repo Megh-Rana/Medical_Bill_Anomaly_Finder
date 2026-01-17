@@ -38,3 +38,4 @@ coverage
 # Backend
 backend/__pycache__
 backend/anomalies/__pycache__
+backend/anomalies/surgery_detection/__pycache__

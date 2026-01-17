@@ -1,0 +1,126 @@
+{
+    "_metadata": {
+        "source": "CGHS Office Memorandum and Delhi Government Health Scheme Guidelines",
+        "last_updated": "2024-02-01",
+        "notes": "Rates are for semi-private ward. General ward -5%, Private ward +5%. Super-specialty +15%."
+    },
+    "tier_definitions": {
+        "tier1": {
+            "description": "Metro cities - Base rates apply (100%)",
+            "cities": [
+                "Mumbai",
+                "Delhi",
+                "New Delhi",
+                "Bangalore",
+                "Bengaluru",
+                "Chennai",
+                "Hyderabad",
+                "Kolkata",
+                "Gurgaon",
+                "Gurugram",
+                "Noida",
+                "Ghaziabad",
+                "Faridabad",
+                "Thane",
+                "Navi Mumbai"
+            ],
+            "rate_multiplier": 1.0,
+            "source": "CGHS covered cities classification"
+        },
+        "tier2": {
+            "description": "State capitals and major cities - 10% lower rates",
+            "cities": [
+                "Pune",
+                "Ahmedabad",
+                "Jaipur",
+                "Lucknow",
+                "Chandigarh",
+                "Bhopal",
+                "Indore",
+                "Nagpur",
+                "Patna",
+                "Bhubaneswar",
+                "Thiruvananthapuram",
+                "Kochi",
+                "Coimbatore",
+                "Visakhapatnam",
+                "Vadodara",
+                "Surat",
+                "Ludhiana",
+                "Agra",
+                "Varanasi",
+                "Nashik",
+                "Madurai",
+                "Mysore",
+                "Mangalore",
+                "Panaji",
+                "Ranchi",
+                "Raipur",
+                "Dehradun",
+                "Shimla",
+                "Amritsar",
+                "Allahabad",
+                "Kanpur",
+                "Meerut",
+                "Jabalpur",
+                "Gwalior"
+            ],
+            "rate_multiplier": 0.90,
+            "source": "CGHS Tier II city rates are 10% lower than Tier I"
+        },
+        "tier3": {
+            "description": "Smaller cities and towns - 20% lower rates",
+            "cities": [
+                "_default"
+            ],
+            "rate_multiplier": 0.80,
+            "source": "CGHS Tier III city rates are 20% lower than Tier I"
+        }
+    },
+    "accreditation_premiums": {
+        "nabh": {
+            "description": "National Accreditation Board for Hospitals & Healthcare Providers",
+            "premium_percent": 15,
+            "notes": "NABH rates are ~15% higher than non-NABH. Example: Lap Chole ₹33,000 (NABH) vs ₹28,050 (non-NABH)"
+        },
+        "nabl": {
+            "description": "National Accreditation Board for Testing and Calibration Laboratories",
+            "premium_percent": 15,
+            "notes": "NABL accreditation treated same as NABH for billing purposes"
+        },
+        "jci": {
+            "description": "Joint Commission International",
+            "premium_percent": 25,
+            "notes": "International accreditation, premium higher than NABH"
+        },
+        "super_specialty": {
+            "description": "Super specialty hospitals (in addition to NABH)",
+            "premium_percent": 15,
+            "notes": "Super specialty hospitals may charge 15% higher than NABH rates for corresponding specialties"
+        },
+        "none": {
+            "description": "Non-accredited hospitals",
+            "premium_percent": 0,
+            "notes": "Base rates apply"
+        }
+    },
+    "room_category_adjustments": {
+        "general_ward": {
+            "adjustment_percent": -5,
+            "description": "5% lower than semi-private ward rates"
+        },
+        "semi_private": {
+            "adjustment_percent": 0,
+            "description": "Base package rates apply"
+        },
+        "private": {
+            "adjustment_percent": 5,
+            "description": "5% higher than semi-private ward rates"
+        }
+    },
+    "important_rules": {
+        "room_multiplier_applicability": "Room category adjustments apply ONLY to room rent and nursing charges. NEVER to implants, medicines, or consumables per NPPA guidelines.",
+        "cghs_applicability": "CGHS rates are applicable to empanelled hospitals. Private hospitals may charge higher to non-CGHS patients.",
+        "package_inclusions": "Package rates are inclusive of OT charges, anesthesia, routine investigations, nursing care for average length of stay."
+    }
+}

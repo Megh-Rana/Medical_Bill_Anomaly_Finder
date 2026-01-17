@@ -1,0 +1,542 @@
+{
+    "_metadata": {
+        "source": "CGHS Office Memorandum February 2024, December 2023 revisions",
+        "last_updated": "2024-02-01",
+        "notes": "All prices in INR. NABH rates shown. Non-NABH rates are ~15% lower. Tier II -10%, Tier III -20%."
+    },
+    "procedures": [
+        {
+            "procedure_id": "CGHS_LAP_CHOLE",
+            "name": "Laparoscopic Cholecystectomy",
+            "aliases": [
+                "lap chole",
+                "gallbladder removal",
+                "cholecystectomy",
+                "GB removal"
+            ],
+            "category": "general_surgery",
+            "sub_category": "hepatobiliary",
+            "complexity": "moderate",
+            "typical_duration_hours": 1.5,
+            "typical_stay_days": 2,
+            "pricing": {
+                "cghs_nabh": 33000,
+                "cghs_non_nabh": 28050,
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "laparoscopy kit",
+                "OT charges",
+                "anesthesia",
+                "trocars",
+                "endoclip applicator",
+                "CO2 insufflation",
+                "routine investigations",
+                "nursing care",
+                "room charges for standard stay"
+            ],
+            "incompatible_with": [
+                "open cholecystectomy",
+                "open surgery retractor set"
+            ],
+            "required_consumables": [
+                "trocars",
+                "endoclips"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_LAP_APPY",
+            "name": "Laparoscopic Appendectomy",
+            "aliases": [
+                "lap appendectomy",
+                "appendix removal",
+                "appendicectomy"
+            ],
+            "category": "general_surgery",
+            "sub_category": "gastrointestinal",
+            "complexity": "minor",
+            "typical_duration_hours": 1,
+            "typical_stay_days": 2,
+            "pricing": {
+                "cghs_nabh": 30000,
+                "cghs_non_nabh": 25500,
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "laparoscopy kit",
+                "OT charges",
+                "anesthesia",
+                "trocars",
+                "endo-loop"
+            ],
+            "incompatible_with": [
+                "open appendectomy"
+            ],
+            "required_consumables": [
+                "trocars",
+                "endo-loop"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_LAP_HERNIA",
+            "name": "Laparoscopic Hernia Repair (Inguinoplasty)",
+            "aliases": [
+                "lap hernia",
+                "TEP",
+                "TAPP",
+                "laparoscopic hernioplasty"
+            ],
+            "category": "general_surgery",
+            "sub_category": "hernia",
+            "complexity": "moderate",
+            "typical_duration_hours": 1.5,
+            "typical_stay_days": 2,
+            "pricing": {
+                "cghs_nabh": 35000,
+                "cghs_non_nabh": 29750,
+                "notes": "Including tracker and mesh",
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "laparoscopy kit",
+                "OT charges",
+                "anesthesia",
+                "mesh",
+                "mesh fixation device"
+            ],
+            "incompatible_with": [
+                "open hernia repair"
+            ],
+            "required_consumables": [
+                "mesh",
+                "trocars",
+                "mesh fixator"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_HEMORRHOIDECTOMY",
+            "name": "Hemorrhoidectomy",
+            "aliases": [
+                "piles surgery",
+                "hemorrhoid removal"
+            ],
+            "category": "general_surgery",
+            "sub_category": "proctology",
+            "complexity": "minor",
+            "typical_duration_hours": 1,
+            "typical_stay_days": 1,
+            "pricing": {
+                "cghs_nabh": 30000,
+                "cghs_non_nabh": 25500,
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia",
+                "dressings"
+            ],
+            "incompatible_with": [],
+            "required_consumables": []
+        },
+        {
+            "procedure_id": "CGHS_STAPLER_HEMORRHOID",
+            "name": "Stapler Hemorrhoidectomy (PPH)",
+            "aliases": [
+                "stapler piles",
+                "PPH",
+                "procedure for prolapse and hemorrhoids"
+            ],
+            "category": "general_surgery",
+            "sub_category": "proctology",
+            "complexity": "minor",
+            "typical_duration_hours": 0.75,
+            "typical_stay_days": 1,
+            "pricing": {
+                "cghs_nabh": 43700,
+                "cghs_non_nabh": 37145,
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "PPH stapler",
+                "OT charges",
+                "anesthesia"
+            ],
+            "incompatible_with": [
+                "laser hemorrhoidectomy",
+                "laser fiber",
+                "laser piles"
+            ],
+            "required_consumables": [
+                "PPH stapler"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_CATARACT_PHACO",
+            "name": "Cataract Surgery - Phacoemulsification with Foldable IOL",
+            "aliases": [
+                "phaco",
+                "cataract removal",
+                "lens replacement",
+                "cataract surgery"
+            ],
+            "category": "ophthalmology",
+            "sub_category": "lens_surgery",
+            "complexity": "minor",
+            "typical_duration_hours": 1,
+            "typical_stay_days": 0,
+            "pricing": {
+                "cghs_nabh": 12398,
+                "cghs_non_nabh": 10781,
+                "notes": "Silicone/Acrylic/PMMA IOL",
+                "source": "CGHS Ophthalmology Rates Feb 2024"
+            },
+            "bundled_items": [
+                "IOL lens",
+                "viscoelastic",
+                "OT charges",
+                "eye drops"
+            ],
+            "incompatible_with": [
+                "LASIK",
+                "SMILE",
+                "PRK"
+            ],
+            "required_consumables": [
+                "IOL lens"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_CATARACT_SICS",
+            "name": "Small Incision Cataract Surgery (SICS) with IOL",
+            "aliases": [
+                "SICS",
+                "manual cataract",
+                "small incision cataract"
+            ],
+            "category": "ophthalmology",
+            "sub_category": "lens_surgery",
+            "complexity": "minor",
+            "typical_duration_hours": 1,
+            "typical_stay_days": 0,
+            "pricing": {
+                "cghs_nabh": 5750,
+                "cghs_non_nabh": 5000,
+                "source": "CGHS Ophthalmology Rates Feb 2024"
+            },
+            "bundled_items": [
+                "IOL lens",
+                "OT charges",
+                "eye drops"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "IOL lens"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_HYSTERECTOMY_ABDOMINAL",
+            "name": "Abdominal Hysterectomy",
+            "aliases": [
+                "TAH",
+                "total abdominal hysterectomy"
+            ],
+            "category": "gynecology",
+            "sub_category": "uterine",
+            "complexity": "major",
+            "typical_duration_hours": 2,
+            "typical_stay_days": 5,
+            "pricing": {
+                "cghs_nabh": 19838,
+                "cghs_non_nabh": 17250,
+                "notes": "With or without salpingo-oophorectomy",
+                "source": "CGHS Gynecology Rates Feb 2024"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia",
+                "sutures",
+                "dressings"
+            ],
+            "incompatible_with": [],
+            "required_consumables": []
+        },
+        {
+            "procedure_id": "CGHS_TKR",
+            "name": "Total Knee Replacement (Unilateral)",
+            "aliases": [
+                "TKR",
+                "knee replacement",
+                "knee arthroplasty",
+                "total knee arthroplasty"
+            ],
+            "category": "orthopedics",
+            "sub_category": "joint_replacement",
+            "complexity": "major",
+            "typical_duration_hours": 2,
+            "typical_stay_days": 7,
+            "pricing": {
+                "cghs_nabh": 152000,
+                "cghs_non_nabh": 129200,
+                "notes": "Semi-private ward. Super-specialty +15%",
+                "source": "CGHS Orthopedic Rates 2024"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia",
+                "knee implant",
+                "bone cement",
+                "physiotherapy initial",
+                "dressings",
+                "room charges"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "knee implant"
+            ],
+            "implant_price_cap": {
+                "applies": true,
+                "reference": "NPPA September 2024",
+                "max_price": 83547
+            }
+        },
+        {
+            "procedure_id": "CGHS_THR",
+            "name": "Total Hip Replacement (Unilateral)",
+            "aliases": [
+                "THR",
+                "hip replacement",
+                "hip arthroplasty",
+                "total hip arthroplasty"
+            ],
+            "category": "orthopedics",
+            "sub_category": "joint_replacement",
+            "complexity": "major",
+            "typical_duration_hours": 2.5,
+            "typical_stay_days": 7,
+            "pricing": {
+                "cghs_nabh": 129000,
+                "cghs_non_nabh": 109650,
+                "notes": "Semi-private ward. Super-specialty +15%",
+                "source": "CGHS Orthopedic Rates 2024"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia",
+                "hip implant",
+                "physiotherapy initial",
+                "dressings"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "hip implant"
+            ],
+            "implant_price_cap": {
+                "applies": true,
+                "reference": "NPPA August 2017",
+                "max_price": 75490
+            }
+        },
+        {
+            "procedure_id": "CGHS_CABG_ON_PUMP",
+            "name": "CABG - On Pump (Coronary Bypass Surgery)",
+            "aliases": [
+                "coronary bypass",
+                "CABG",
+                "heart bypass",
+                "cardiac bypass surgery"
+            ],
+            "category": "cardiac",
+            "sub_category": "coronary",
+            "complexity": "major",
+            "typical_duration_hours": 5,
+            "typical_stay_days": 10,
+            "pricing": {
+                "cghs_nabh": 161000,
+                "cghs_non_nabh": 140000,
+                "notes": "CABG without valve. CABG+Valve: NABH ₹194,350, Non-NABH ₹169,000",
+                "source": "CGHS Cardiology Rates 2024"
+            },
+            "bundled_items": [
+                "heart-lung machine",
+                "oxygenator",
+                "perfusionist charges",
+                "cardioplegia solution",
+                "ICU charges",
+                "OT charges",
+                "anesthesia",
+                "routine investigations",
+                "room charges"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "oxygenator",
+                "cannulae",
+                "sutures"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_CABG_OFF_PUMP",
+            "name": "CABG - Off Pump (Beating Heart Surgery)",
+            "aliases": [
+                "off-pump CABG",
+                "OPCAB",
+                "beating heart surgery"
+            ],
+            "category": "cardiac",
+            "sub_category": "coronary",
+            "complexity": "major",
+            "typical_duration_hours": 4.5,
+            "typical_stay_days": 8,
+            "pricing": {
+                "cghs_nabh": 161000,
+                "cghs_non_nabh": 140000,
+                "notes": "Same rates as on-pump CABG in CGHS",
+                "source": "CGHS Cardiology Rates 2024"
+            },
+            "bundled_items": [
+                "heart stabilizer",
+                "ICU charges",
+                "OT charges",
+                "anesthesia"
+            ],
+            "incompatible_with": [
+                "oxygenator",
+                "perfusionist charges",
+                "heart-lung machine",
+                "cardioplegia"
+            ],
+            "required_consumables": [
+                "heart stabilizer",
+                "sutures"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_PTCA",
+            "name": "PTCA with Stent (Coronary Angioplasty)",
+            "aliases": [
+                "angioplasty",
+                "coronary stenting",
+                "PCI",
+                "PTCA"
+            ],
+            "category": "cardiac",
+            "sub_category": "interventional",
+            "complexity": "moderate",
+            "typical_duration_hours": 1.5,
+            "typical_stay_days": 3,
+            "pricing": {
+                "cghs_nabh": 92000,
+                "cghs_non_nabh": 78200,
+                "notes": "With vascular closure device. Without VCD: NABH ₹83,725, Non-NABH ₹71,150",
+                "source": "CGHS Cardiology Rates Dec 2023"
+            },
+            "bundled_items": [
+                "cath lab charges",
+                "angiography",
+                "guide wire",
+                "guide catheter",
+                "balloon catheter",
+                "introducer sheath",
+                "contrast dye"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "coronary stent",
+                "guide wire",
+                "balloon catheter"
+            ],
+            "implant_price_cap": {
+                "applies": true,
+                "reference": "NPPA March 2025",
+                "bms_max": 10693,
+                "des_max": 38933
+            }
+        },
+        {
+            "procedure_id": "CGHS_VENTRAL_HERNIA",
+            "name": "Laparoscopic Ventral/Paraumbilical Hernia Repair",
+            "aliases": [
+                "ventral hernia",
+                "umbilical hernia",
+                "paraumbilical hernia"
+            ],
+            "category": "general_surgery",
+            "sub_category": "hernia",
+            "complexity": "moderate",
+            "typical_duration_hours": 1.5,
+            "typical_stay_days": 2,
+            "pricing": {
+                "cghs_nabh": 20125,
+                "cghs_non_nabh": 17106,
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "laparoscopy kit",
+                "OT charges",
+                "anesthesia",
+                "mesh"
+            ],
+            "incompatible_with": [],
+            "required_consumables": [
+                "mesh"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_INGUINAL_HERNIA_OPEN",
+            "name": "Inguinal Hernia - Hernioplasty (Open)",
+            "aliases": [
+                "inguinal hernia",
+                "open hernia repair",
+                "hernioplasty"
+            ],
+            "category": "general_surgery",
+            "sub_category": "hernia",
+            "complexity": "moderate",
+            "typical_duration_hours": 1,
+            "typical_stay_days": 2,
+            "pricing": {
+                "cghs_nabh": 32000,
+                "cghs_non_nabh": 27200,
+                "notes": "Herniorrhaphy (without mesh): NABH ₹26,000",
+                "source": "CGHS General Surgery Rates Feb 2024"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia",
+                "mesh",
+                "sutures"
+            ],
+            "incompatible_with": [
+                "laparoscopic hernia repair",
+                "trocars"
+            ],
+            "required_consumables": [
+                "mesh"
+            ]
+        },
+        {
+            "procedure_id": "CGHS_HIATUS_HERNIA",
+            "name": "Hiatus Hernia Repair - Abdominal",
+            "aliases": [
+                "hiatal hernia",
+                "hiatus hernia"
+            ],
+            "category": "general_surgery",
+            "sub_category": "hernia",
+            "complexity": "moderate",
+            "typical_duration_hours": 2,
+            "typical_stay_days": 3,
+            "pricing": {
+                "cghs_nabh": 33000,
+                "cghs_non_nabh": 28050,
+                "source": "CGHS General Surgery Rates"
+            },
+            "bundled_items": [
+                "OT charges",
+                "anesthesia"
+            ],
+            "incompatible_with": [],
+            "required_consumables": []
+        }
+    ]
+}
