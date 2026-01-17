@@ -12,8 +12,8 @@ interface ProcessingPageProps {
 async function analyzeBill(items: any[], surgeryContext: SurgeryContext) {
   // Choose endpoint based on bill type
   const endpoint = surgeryContext.billType === "surgery"
-    ? "https://mbaf-backend.onrender.com/analyze/surgery"
-    : "https://mbaf-backend.onrender.com/analyze";
+    ? "http://localhost:8000/analyze/surgery"
+    : "http://localhost:8000/analyze";
 
   const payload = {
     items,
