@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
-import { useBill } from "@/context/BillContext";
+import { useBill, SurgeryContext } from "@/context/BillContext";
 import { useAuth } from "@/context/AuthContext";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -9,11 +9,26 @@ interface ProcessingPageProps {
   onNavigate: (page: string) => void;
 }
 
-async function analyzeBill(items: any[]) {
-  const res = await fetch("http://localhost:8000/analyze", {
+async function analyzeBill(items: any[], surgeryContext: SurgeryContext) {
+  // Choose endpoint based on bill type
+  const endpoint = surgeryContext.billType === "surgery"
+    ? "http://localhost:8000/analyze/surgery"
+    : "http://localhost:8000/analyze";
+
+  const payload = {
+    items,
+    bill_type: surgeryContext.billType,
+    hospital_name: surgeryContext.hospitalName,
+    hospital_city: surgeryContext.hospitalCity,
+    hospital_accreditation: surgeryContext.hospitalAccreditation,
+    primary_surgery: surgeryContext.primarySurgery,
+    room_category: surgeryContext.roomCategory,
+  };
+
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items })
+    body: JSON.stringify(payload)
   });
 
   if (!res.ok) throw new Error("Analysis failed");
@@ -21,7 +36,7 @@ async function analyzeBill(items: any[]) {
 }
 
 export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
-  const { billItems, setAnalysis, billName } = useBill();
+  const { billItems, setAnalysis, billName, surgeryContext } = useBill();
   const { user, userData, consumeCredit } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -29,12 +44,20 @@ export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
 
   const hasRunRef = useRef(false);
 
-  const steps = [
-    { label: "Finding anomalies", icon: "🔍" },
-    { label: "Comparing with market rates", icon: "📊" },
-    { label: "Analyzing billing patterns", icon: "📈" },
-    { label: "Generating insights", icon: "✨" }
-  ];
+  const steps = surgeryContext.billType === "surgery"
+    ? [
+      { label: "Finding anomalies", icon: "🔍" },
+      { label: "Checking price bands", icon: "💰" },
+      { label: "Detecting unbundling", icon: "📦" },
+      { label: "Validating implant prices", icon: "🦴" },
+      { label: "Generating insights", icon: "✨" }
+    ]
+    : [
+      { label: "Finding anomalies", icon: "🔍" },
+      { label: "Comparing with market rates", icon: "📊" },
+      { label: "Analyzing billing patterns", icon: "📈" },
+      { label: "Generating insights", icon: "✨" }
+    ];
 
   useEffect(() => {
     if (!user || !userData || userData.credits < 1) {
@@ -57,7 +80,7 @@ export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
 
     async function run() {
       try {
-        const result = await analyzeBill(billItems);
+        const result = await analyzeBill(billItems, surgeryContext);
         if (!mounted) return;
 
         // 1️⃣ store in context
@@ -128,13 +151,12 @@ export function ProcessingPage({ onNavigate }: ProcessingPageProps) {
             {steps.map((s, i) => (
               <div
                 key={i}
-                className={`p-4 rounded-lg border ${
-                  i === currentStep
-                    ? "bg-primary/5 border-primary"
-                    : i < currentStep
+                className={`p-4 rounded-lg border ${i === currentStep
+                  ? "bg-primary/5 border-primary"
+                  : i < currentStep
                     ? "bg-success/10 border-success/30"
                     : "bg-card"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-4">
                   <span className="text-2xl">

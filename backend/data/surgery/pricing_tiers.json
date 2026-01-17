@@ -1,0 +1,96 @@
+{
+    "tier_definitions": {
+        "tier1": {
+            "description": "Metro cities with highest cost of living and healthcare infrastructure",
+            "cities": [
+                "Mumbai",
+                "Delhi",
+                "New Delhi",
+                "Bangalore",
+                "Bengaluru",
+                "Chennai",
+                "Hyderabad",
+                "Kolkata",
+                "Gurgaon",
+                "Gurugram",
+                "Noida",
+                "Ghaziabad",
+                "Faridabad",
+                "Thane",
+                "Navi Mumbai"
+            ],
+            "multiplier": 1.0
+        },
+        "tier2": {
+            "description": "State capitals and major cities",
+            "cities": [
+                "Pune",
+                "Ahmedabad",
+                "Jaipur",
+                "Lucknow",
+                "Chandigarh",
+                "Bhopal",
+                "Indore",
+                "Nagpur",
+                "Patna",
+                "Bhubaneswar",
+                "Thiruvananthapuram",
+                "Kochi",
+                "Coimbatore",
+                "Visakhapatnam",
+                "Vadodara",
+                "Surat",
+                "Ludhiana",
+                "Agra",
+                "Varanasi",
+                "Nashik",
+                "Madurai",
+                "Mysore",
+                "Mangalore",
+                "Goa",
+                "Ranchi",
+                "Raipur",
+                "Dehradun",
+                "Shimla",
+                "Amritsar"
+            ],
+            "multiplier": 0.8
+        },
+        "tier3": {
+            "description": "Smaller cities and towns",
+            "cities": [
+                "_default"
+            ],
+            "multiplier": 0.6
+        }
+    },
+    "accreditation_premiums": {
+        "nabh": {
+            "description": "National Accreditation Board for Hospitals",
+            "premium_percent": 15
+        },
+        "jci": {
+            "description": "Joint Commission International",
+            "premium_percent": 25
+        },
+        "nabl": {
+            "description": "National Accreditation Board for Testing and Calibration Laboratories",
+            "premium_percent": 10
+        },
+        "none": {
+            "description": "No accreditation",
+            "premium_percent": 0
+        }
+    },
+    "room_category_multipliers": {
+        "general_ward": 1.0,
+        "semi_private": 1.15,
+        "private": 1.3,
+        "deluxe": 1.5,
+        "suite": 1.8
+    },
+    "notes": {
+        "room_multiplier_applicability": "Room category multipliers apply ONLY to room rent and nursing charges. NEVER to implants, medicines, or consumables per NPPA guidelines.",
+        "cghs_applicability": "CGHS rates are floor prices. Private hospitals may charge higher but not below CGHS for empanelled patients."
+    }
+}

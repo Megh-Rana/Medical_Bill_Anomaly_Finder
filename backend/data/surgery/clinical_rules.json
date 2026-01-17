@@ -1,0 +1,210 @@
+{
+    "clinical_rules": [
+        {
+            "rule_id": "CLIN_TORIC_ASTIGMATISM",
+            "name": "Toric IOL requires astigmatism",
+            "description": "Toric intraocular lenses are specifically designed to correct astigmatism. Billing toric IOL without documented astigmatism is inappropriate.",
+            "trigger_items": [
+                "toric IOL",
+                "toric lens",
+                "astigmatism correcting IOL"
+            ],
+            "required_conditions": [
+                "astigmatism",
+                "H52.2",
+                "cylindrical power"
+            ],
+            "severity": "high",
+            "category": "ophthalmology"
+        },
+        {
+            "rule_id": "CLIN_SMILE_NO_FLAP",
+            "name": "SMILE is flapless",
+            "description": "SMILE (Small Incision Lenticule Extraction) doesn't create a corneal flap. Any flap-related charges indicate wrong procedure billing.",
+            "trigger_items": [
+                "SMILE",
+                "small incision lenticule extraction"
+            ],
+            "incompatible_items": [
+                "flap creation",
+                "microkeratome",
+                "keratome blade",
+                "flap lift"
+            ],
+            "severity": "high",
+            "category": "ophthalmology"
+        },
+        {
+            "rule_id": "CLIN_HAIR_GRAFT_LIMIT",
+            "name": "Hair transplant graft limits",
+            "description": "Biological limits exist for single-session hair transplant. Exceeding 5000 grafts in FUE or 6000 in FUT is clinically improbable.",
+            "applies_to": [
+                "hair transplant",
+                "FUE",
+                "FUT",
+                "follicular unit"
+            ],
+            "limits": {
+                "FUE": {
+                    "max_grafts": 5000,
+                    "typical_range": [
+                        1500,
+                        3500
+                    ]
+                },
+                "FUT": {
+                    "max_grafts": 6000,
+                    "typical_range": [
+                        2000,
+                        4000
+                    ]
+                }
+            },
+            "severity": "high",
+            "category": "cosmetic"
+        },
+        {
+            "rule_id": "CLIN_ROBOTIC_CONSUMABLES",
+            "name": "Robotic surgery requires robotic consumables",
+            "description": "If robotic surgery is billed, robotic-specific consumables must be present. Robotic charges without consumables suggests non-robotic procedure billed as robotic.",
+            "trigger_items": [
+                "robotic surgery",
+                "da vinci",
+                "robotic-assisted",
+                "robot charges"
+            ],
+            "required_items": [
+                "robotic instrument",
+                "robotic arm",
+                "robotic trocar",
+                "da vinci consumable",
+                "robotic drape"
+            ],
+            "severity": "high",
+            "category": "robotic"
+        },
+        {
+            "rule_id": "CLIN_BILATERAL_DOUBLE_IMPLANT",
+            "name": "Bilateral procedures need bilateral implants",
+            "description": "Bilateral joint replacement or bilateral surgery must have two implant sets. Charging for bilateral procedure with single implant or vice versa is suspicious.",
+            "applies_to": "bilateral_procedures",
+            "rules": {
+                "bilateral_tkr": {
+                    "required_implants": 2,
+                    "implant_type": "knee implant"
+                },
+                "bilateral_thr": {
+                    "required_implants": 2,
+                    "implant_type": "hip implant"
+                },
+                "bilateral_cataract": {
+                    "required_implants": 2,
+                    "implant_type": "IOL"
+                }
+            },
+            "severity": "critical",
+            "category": "orthopedics"
+        },
+        {
+            "rule_id": "CLIN_STENT_COUNT_MATCH",
+            "name": "Stent count verification",
+            "description": "Number of stents billed must match angiography findings. Billing 3 stents when angiography shows single vessel disease is suspicious.",
+            "applies_to": [
+                "PTCA",
+                "angioplasty",
+                "stenting"
+            ],
+            "typical_counts": {
+                "single_vessel_disease": [
+                    1,
+                    2
+                ],
+                "double_vessel_disease": [
+                    2,
+                    3
+                ],
+                "triple_vessel_disease": [
+                    3,
+                    5
+                ]
+            },
+            "max_stents_per_session": 6,
+            "severity": "high",
+            "category": "cardiac"
+        },
+        {
+            "rule_id": "CLIN_ICU_DURATION",
+            "name": "ICU stay clinically appropriate",
+            "description": "ICU duration should match procedure complexity. Minor procedures billing multiple ICU days is suspicious.",
+            "rules": {
+                "minor_procedure": {
+                    "expected_icu_days": 0,
+                    "max_icu_days": 1
+                },
+                "moderate_procedure": {
+                    "expected_icu_days": 1,
+                    "max_icu_days": 3
+                },
+                "major_procedure": {
+                    "expected_icu_days": 2,
+                    "max_icu_days": 7
+                },
+                "cardiac_surgery": {
+                    "expected_icu_days": 3,
+                    "max_icu_days": 10
+                }
+            },
+            "severity": "medium",
+            "category": "billing"
+        },
+        {
+            "rule_id": "CLIN_PROCEDURE_DURATION",
+            "name": "OT duration consistency",
+            "description": "OT time billed should be consistent with procedure type. 8-hour OT charges for a 1-hour procedure is suspicious.",
+            "severity": "medium",
+            "category": "billing"
+        }
+    ],
+    "time_feasibility_rules": [
+        {
+            "rule_id": "TIME_CONSULT_DUPLICATE",
+            "name": "Duplicate consultation check",
+            "description": "Same specialist consultation billed multiple times on same day for same procedure.",
+            "check": "same_specialist_same_day",
+            "allowed_exceptions": [
+                "pre-op and post-op on same day for different purposes"
+            ],
+            "severity": "medium"
+        },
+        {
+            "rule_id": "TIME_SURGERY_OVERLAP",
+            "name": "Surgery time overlap",
+            "description": "Two surgeries billed with overlapping OT times - impossible unless different surgeons in different OTs.",
+            "severity": "critical"
+        },
+        {
+            "rule_id": "TIME_ADMISSION_SURGERY",
+            "name": "Admission to surgery timing",
+            "description": "Surgery performed before recorded admission time is impossible.",
+            "severity": "critical"
+        }
+    ],
+    "ghost_service_indicators": [
+        {
+            "indicator": "Robotic charges without robotic consumables",
+            "explanation": "Robotic surgery requires specific expensive consumables. Their absence suggests procedure was conventional, not robotic."
+        },
+        {
+            "indicator": "Physiotherapy on surgery day",
+            "explanation": "Post-operative physiotherapy on day of major surgery is unusual for most procedures."
+        },
+        {
+            "indicator": "Multiple specialist consultations same day",
+            "explanation": "More than 3-4 different specialist consultations on a single day is unusual and may indicate ghost billing."
+        },
+        {
+            "indicator": "Consumables without corresponding procedure",
+            "explanation": "Billing for surgical consumables without the corresponding surgery charge."
+        }
+    ]
+}

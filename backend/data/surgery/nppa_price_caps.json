@@ -1,0 +1,175 @@
+{
+    "nppa_regulated_devices": {
+        "coronary_stents": {
+            "category": "cardiovascular",
+            "price_caps": {
+                "bare_metal_stent": {
+                    "max_price": 7260,
+                    "description": "Bare Metal Stent (BMS)"
+                },
+                "drug_eluting_stent": {
+                    "max_price": 29600,
+                    "description": "Drug Eluting Stent (DES)"
+                },
+                "bioresorbable_stent": {
+                    "max_price": 29600,
+                    "description": "Bioresorbable Vascular Scaffold (BVS)"
+                }
+            },
+            "keywords": [
+                "stent",
+                "coronary stent",
+                "DES",
+                "BMS",
+                "drug eluting",
+                "bare metal"
+            ],
+            "notification_date": "2017-02-13",
+            "notification_number": "S.O. 399(E)"
+        },
+        "knee_implants": {
+            "category": "orthopedic",
+            "price_caps": {
+                "cruciate_retaining": {
+                    "max_price": 54720,
+                    "description": "Cruciate Retaining Knee System"
+                },
+                "posterior_stabilized": {
+                    "max_price": 54720,
+                    "description": "Posterior Stabilized Knee System"
+                },
+                "revision_knee": {
+                    "max_price": 76600,
+                    "description": "Revision Knee System"
+                },
+                "unicondylar": {
+                    "max_price": 43220,
+                    "description": "Unicondylar/Unicompartmental Knee"
+                },
+                "high_flex": {
+                    "max_price": 54720,
+                    "description": "High Flexion Knee System"
+                },
+                "rotating_platform": {
+                    "max_price": 54720,
+                    "description": "Rotating Platform Knee"
+                },
+                "oxidized_zirconium": {
+                    "max_price": 76600,
+                    "description": "Special Alloy (Oxinium) Knee"
+                }
+            },
+            "keywords": [
+                "knee implant",
+                "knee prosthesis",
+                "TKR implant",
+                "knee replacement implant"
+            ],
+            "notification_date": "2017-08-16",
+            "notification_number": "S.O. 2659(E)"
+        },
+        "hip_implants": {
+            "category": "orthopedic",
+            "price_caps": {
+                "partial_cemented": {
+                    "max_price": 29410,
+                    "description": "Partial Hip - Cemented"
+                },
+                "partial_cementless": {
+                    "max_price": 35120,
+                    "description": "Partial Hip - Cementless"
+                },
+                "total_cemented": {
+                    "max_price": 52170,
+                    "description": "Total Hip - Cemented"
+                },
+                "total_hybrid": {
+                    "max_price": 62530,
+                    "description": "Total Hip - Hybrid"
+                },
+                "total_cementless": {
+                    "max_price": 75490,
+                    "description": "Total Hip - Cementless"
+                }
+            },
+            "keywords": [
+                "hip implant",
+                "hip prosthesis",
+                "THR implant",
+                "hip replacement implant"
+            ],
+            "notification_date": "2017-08-16",
+            "notification_number": "S.O. 2659(E)"
+        }
+    },
+    "room_category_markup_rule": {
+        "allowed": false,
+        "description": "Hospitals CANNOT charge different prices for implants based on room category. This is illegal per NPPA guidelines.",
+        "applicable_to": [
+            "stents",
+            "knee implants",
+            "hip implants",
+            "all NPPA regulated devices"
+        ],
+        "violation_severity": "critical",
+        "reference": "NPPA notification prohibiting differential pricing of orthopedic implants based on room category"
+    },
+    "implant_specification_requirements": {
+        "mandatory_details": [
+            "manufacturer_name",
+            "implant_model",
+            "implant_type",
+            "serial_number",
+            "batch_number"
+        ],
+        "violation_for_missing": {
+            "severity": "high",
+            "reason": "Unspecified high-end implant billing without model details enables overcharging"
+        }
+    },
+    "common_implant_aliases": {
+        "stent_aliases": [
+            "coronary stent",
+            "DES",
+            "BMS",
+            "drug eluting stent",
+            "bare metal stent",
+            "everolimus stent",
+            "sirolimus stent",
+            "zotarolimus stent",
+            "XIENCE",
+            "PROMUS",
+            "RESOLUTE",
+            "SYNERGY",
+            "bioresorbable",
+            "absorb"
+        ],
+        "knee_aliases": [
+            "knee implant",
+            "TKR implant",
+            "knee prosthesis",
+            "knee system",
+            "tibial tray",
+            "femoral component",
+            "patellar button",
+            "knee liner",
+            "total knee"
+        ],
+        "hip_aliases": [
+            "hip implant",
+            "THR implant",
+            "hip prosthesis",
+            "femoral stem",
+            "acetabular cup",
+            "femoral head",
+            "liner",
+            "total hip",
+            "hip system"
+        ]
+    },
+    "notes": {
+        "last_updated": "2024-01-01",
+        "source": "National Pharmaceutical Pricing Authority (NPPA) notifications",
+        "enforcement": "Violations constitute overcharging under Drug Price Control Order (DPCO)"
+    }
+}
