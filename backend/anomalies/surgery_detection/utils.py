@@ -79,7 +79,7 @@ def get_tier_multiplier(city: str) -> float:
     tier_defs = pricing_tiers.get("tier_definitions", {})
     
     tier = get_city_tier(city)
-    return tier_defs.get(tier, {}).get("multiplier", 0.6)
+    return tier_defs.get(tier, {}).get("rate_multiplier", 0.8)
 
 def get_accreditation_premium(accreditation: str) -> float:
     """Get the accreditation premium percentage."""

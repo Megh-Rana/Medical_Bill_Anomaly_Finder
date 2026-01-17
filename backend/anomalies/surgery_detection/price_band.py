@@ -37,25 +37,33 @@ def detect_price_band_violations(items: List[Dict], procedure_context: Dict) -> 
     if not procedure:
         return anomalies
     
-    # Get pricing parameters
+    # Get pricing parameters based on CGHS structure
     tier = get_city_tier(hospital_city)
-    tier_multiplier = get_tier_multiplier(hospital_city)
-    accred_premium = get_accreditation_premium(accreditation)
+    tier_multiplier = get_tier_multiplier(hospital_city)  # 1.0 for tier1, 0.9 for tier2, 0.8 for tier3
+    accred_premium = get_accreditation_premium(accreditation)  # 0.15 for NABH, 0.25 for JCI
     
     pricing = procedure.get("pricing", {})
     
-    # Determine applicable price range
-    tier_key = f"{tier}_private_range"
-    price_range = pricing.get(tier_key)
+    # Determine base rate based on accreditation
+    if accreditation.lower() in ["nabh", "nabl", "jci"]:
+        base_rate = pricing.get("cghs_nabh", 0)
+    else:
+        base_rate = pricing.get("cghs_non_nabh", 0)
     
-    if not price_range:
+    if not base_rate:
         return anomalies
     
-    base_min, base_max = price_range
+    # Apply tier adjustments
+    # For tier 2/3, CGHS rate is already the base rate from tier 1
+    # Private hospitals can charge above CGHS with reasonable markup
+    # Expected range: base_rate * tier_multiplier to base_rate * tier_multiplier * 2.5 (150% markup for private market)
     
-    # Adjust for accreditation
-    adjusted_max = base_max * (1 + accred_premium)
-    cghs_base = pricing.get("cghs_base")
+    expected_min = base_rate * tier_multiplier * 0.8  # Some tolerance below
+    expected_max = base_rate * tier_multiplier * 2.5  # Private market can charge up to 2.5x CGHS
+    
+    # For super-specialty add additional 15%
+    if accred_premium > 0.2:  # JCI gets even more premium
+        expected_max = expected_max * (1 + accred_premium)
     
     # Find the surgery charge in bill items
     for item in items:
@@ -69,29 +77,30 @@ def detect_price_band_violations(items: List[Dict], procedure_context: Dict) -> 
         if not _is_surgery_charge(item_name, primary_surgery, procedure):
             continue
         
-        # Check if price exceeds upper bound
-        if total_price > adjusted_max:
+        # Check if price exceeds upper bound (private market cap)
+        if total_price > expected_max:
             anomalies.append({
                 "type": "S1",
                 "item": item_name,
                 "severity": "high",
                 "title": "Price above acceptable range",
                 "explanation": (
-                    f"₹{total_price:,.0f} exceeds max of ₹{adjusted_max:,.0f} for {tier.upper()} city "
-                    f"({accreditation.upper()} accredited). Expected range: ₹{base_min:,.0f} - ₹{adjusted_max:,.0f}"
+                    f"₹{total_price:,.0f} exceeds reasonable max of ₹{expected_max:,.0f} for {tier.upper()} city. "
+                    f"CGHS reference: ₹{base_rate:,.0f}. Tier adjustment: {tier_multiplier}x. "
+                    f"Note: Private hospitals may charge above CGHS, but 2.5x seems excessive."
                 )
             })
         
-        # Check if price is suspiciously below CGHS (possible quality concern or billing manipulation)
-        elif cghs_base and total_price < cghs_base * 0.5:
+        # Check if price is suspiciously below CGHS (possible quality concern)
+        elif total_price < expected_min:
             anomalies.append({
                 "type": "S1",
                 "item": item_name,
                 "severity": "medium",
                 "title": "Price suspiciously low",
                 "explanation": (
-                    f"₹{total_price:,.0f} is less than half the CGHS rate of ₹{cghs_base:,.0f}. "
-                    f"This may indicate incomplete billing or quality concerns."
+                    f"₹{total_price:,.0f} is significantly below CGHS reference of ₹{base_rate:,.0f}. "
+                    f"This may indicate incomplete billing, quality concerns, or additional hidden charges."
                 )
             })
     
