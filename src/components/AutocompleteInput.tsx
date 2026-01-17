@@ -30,7 +30,7 @@ export function AutocompleteInput({
             }
 
             try {
-                const url = `http://localhost:8000/medicines/search?q=${encodeURIComponent(value)}`;
+                const url = `https://mbaf-backend.onrender.com/medicines/search?q=${encodeURIComponent(value)}`;
 
                 const response = await fetch(url);
 
