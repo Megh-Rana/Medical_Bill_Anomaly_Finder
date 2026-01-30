@@ -39,8 +39,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const [analyses, setAnalyses] = useState<AnalysisRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { setAnalysis } = useBill();
-  const { resetBill } = useBill();
+  const { setAnalysis, setBillItems, resetBill } = useBill();
 
   useEffect(() => {
     if (!user) return;
@@ -103,6 +102,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     // 🔑 push analysis result into context
     setAnalysis(data.result);
 
+    // 🔑 restore billItems from classified_items so Total Charged works after hard refresh
+    if (data.result?.classified_items) {
+      setBillItems(data.result.classified_items);
+    }
+
     // 🔑 navigate to real results page
     onNavigate("results");
   };
@@ -155,10 +159,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               onClick={handleStartAnalysis}
               disabled={credits <= 0}
               className={`group rounded-lg p-6 border-2 text-left transition-all
-                ${
-                  credits > 0
-                    ? "bg-primary/5 border-primary hover:bg-primary/10"
-                    : "bg-muted border-border opacity-60 cursor-not-allowed"
+                ${credits > 0
+                  ? "bg-primary/5 border-primary hover:bg-primary/10"
+                  : "bg-muted border-border opacity-60 cursor-not-allowed"
                 }`}
             >
               <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center mb-4">
