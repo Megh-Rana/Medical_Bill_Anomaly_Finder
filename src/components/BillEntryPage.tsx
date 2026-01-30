@@ -73,13 +73,24 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
   const handleSubmit = () => {
     const validItems = items
       .filter(i => i.name.trim())
-      .map(i => ({
-        item_name: i.name,
-        quantity: Number(i.quantity),
-        unit_price: Number(i.unit_price),
-        total_price: Number(i.total_price),
-        category: undefined
-      }));
+      .map(i => {
+        // Default quantity to 1 if not specified
+        const qty = i.quantity.trim() ? Number(i.quantity) : 1;
+        const unitPrice = Number(i.unit_price) || 0;
+
+        // Use billed total if provided, otherwise fall back to calculated total
+        const billedTotal = i.total_price.trim()
+          ? Number(i.total_price)
+          : unitPrice * qty;
+
+        return {
+          item_name: i.name,
+          quantity: qty,
+          unit_price: unitPrice,
+          total_price: billedTotal,
+          category: undefined
+        };
+      });
 
     setBillItems(validItems);
     onNavigate("categorization");
@@ -112,8 +123,8 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
             <button
               onClick={() => setSurgeryContext(prev => ({ ...prev, billType: "medicine" }))}
               className={`px-4 py-2 text-sm font-medium transition-colors ${!isSurgeryBill
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background hover:bg-muted"
+                ? "bg-primary text-primary-foreground"
+                : "bg-background hover:bg-muted"
                 }`}
             >
               Medicine Bill
@@ -121,8 +132,8 @@ export function BillEntryPage({ onNavigate }: BillEntryPageProps) {
             <button
               onClick={() => setSurgeryContext(prev => ({ ...prev, billType: "surgery" }))}
               className={`px-4 py-2 text-sm font-medium transition-colors ${isSurgeryBill
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background hover:bg-muted"
+                ? "bg-primary text-primary-foreground"
+                : "bg-background hover:bg-muted"
                 }`}
             >
               Surgery Bill
